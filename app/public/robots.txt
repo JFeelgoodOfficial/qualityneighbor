@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://qualityneighbor.hartlandranch.com/sitemap.xml

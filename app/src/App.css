@@ -1,0 +1,80 @@
+/* QualityNeighbor - App Specific Styles */
+
+/* Smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Ensure sections stack properly */
+main > section {
+  position: relative;
+}
+
+/* Hero section z-index for proper stacking */
+main > section:first-child {
+  z-index: 10;
+}
+
+/* Card hover effects */
+.paper-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Button press effect */
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid hsl(var(--vintage-red));
+  outline-offset: 2px;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .animate-pulse-subtle,
+  .animate-rotate-slow,
+  .animate-float {
+    animation: none !important;
+  }
+}
+
+/* Mobile touch improvements */
+@media (hover: none) {
+  .paper-card:hover {
+    transform: none;
+  }
+  
+  .vintage-red-btn:hover {
+    transform: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .paper-grain::before {
+    display: none;
+  }
+  
+  nav,
+  .fixed {
+    display: none !important;
+  }
+  
+  section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
