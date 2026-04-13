@@ -99,7 +99,7 @@ export function BusinessAdsSection() {
       ref={sectionRef}
       id="business-ads"
       className="relative w-full py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 xl:px-12"
-      style={{ background: 'hsl(var(--paper-primary))' }}
+      style={{ background: 'hsl(var(--paper-secondary))' }}
     >
       {/* Header */}
       <div ref={headerRef} className="section-header mb-10">

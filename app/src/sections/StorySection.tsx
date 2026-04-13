@@ -74,7 +74,7 @@ export function StorySection() {
       ref={sectionRef}
       id="story"
       className="relative w-full py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 xl:px-12"
-      style={{ background: 'hsl(var(--paper-primary))' }}
+      style={{ background: 'hsl(var(--paper-secondary))' }}
     >
       <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center max-w-7xl mx-auto">
         {/* Text Column */}
