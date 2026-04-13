@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Toaster } from 'sonner';
 import { Navigation } from '@/components/Navigation';
 import { QuickActionButton } from '@/components/QuickActionButton';
 import { HeroSection } from '@/sections/HeroSection';
@@ -94,6 +95,7 @@ function App() {
       </main>
 
       <QuickActionButton />
+      <Toaster richColors position="bottom-right" />
     </div>
   );
 }
