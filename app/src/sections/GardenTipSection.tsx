@@ -94,6 +94,7 @@ export function GardenTipSection() {
             <img
               src="/images/garden-tip.jpg"
               alt="Watering a tomato plant"
+              loading="lazy"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-espresso/40 to-transparent md:bg-gradient-to-r" />

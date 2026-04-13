@@ -132,6 +132,7 @@ export function StorySection() {
               <img
                 src="/images/story-library-1.jpg"
                 alt="Little Free Library on the sidewalk"
+                loading="lazy"
                 className="w-full h-64 sm:h-80 object-cover"
               />
             </div>
@@ -141,6 +142,7 @@ export function StorySection() {
               <img
                 src="/images/story-library-2.jpg"
                 alt="Books inside the library"
+                loading="lazy"
                 className="w-full h-40 sm:h-48 object-cover"
               />
             </div>

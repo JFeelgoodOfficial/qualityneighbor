@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Mail } from 'lucide-react';
+import { Mail, ChevronDown } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,6 +11,7 @@ export function HeroSection() {
   const subheadRef = useRef<HTMLParagraphElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
+  const scrollIndicatorRef = useRef<HTMLButtonElement>(null);
   const sealRef = useRef<HTMLDivElement>(null);
   const mastheadRef = useRef<HTMLDivElement>(null);
 
@@ -73,18 +74,26 @@ export function HeroSection() {
         0.9
       );
 
+      // Scroll indicator
+      loadTl.fromTo(
+        scrollIndicatorRef.current,
+        { y: 8, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.3 },
+        1.0
+      );
+
       // Scroll-driven exit animation
       const scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: 'top top',
-          end: '+=130%',
+          end: '+=90%',
           pin: true,
           scrub: 0.6,
           pinSpacing: true,
           onLeaveBack: () => {
             // Reset all elements to visible when scrolling back to top
-            gsap.set([headlineRef.current, subheadRef.current, badgeRef.current, ctaRef.current, sealRef.current, mastheadRef.current], {
+            gsap.set([headlineRef.current, subheadRef.current, badgeRef.current, ctaRef.current, scrollIndicatorRef.current, sealRef.current, mastheadRef.current], {
               opacity: 1, x: 0, y: 0, scale: 1, rotate: 0
             });
           }
@@ -135,6 +144,14 @@ export function HeroSection() {
         0.78
       );
 
+      // Scroll indicator exit
+      scrollTl.fromTo(
+        scrollIndicatorRef.current,
+        { y: 0, opacity: 1 },
+        { y: '10vh', opacity: 0, ease: 'power2.in' },
+        0.78
+      );
+
       // Masthead exit
       scrollTl.fromTo(
         mastheadRef.current,
@@ -159,7 +176,8 @@ export function HeroSection() {
         <img
           src="/images/hero-vignette.jpg"
           alt="Hartland Ranch neighborhood"
-          className="w-full h-full object-cover opacity-15"
+          fetchPriority="high"
+          className="w-full h-full object-cover opacity-25"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--paper-primary))]/80 via-[hsl(var(--paper-primary))]/60 to-[hsl(var(--paper-primary))]/90" />
       </div>
@@ -180,7 +198,7 @@ export function HeroSection() {
         {/* Hero Headline */}
         <h2
           ref={headlineRef}
-          className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-espresso text-center max-w-4xl leading-tight mt-[-4vh]"
+          className="font-display text-5xl md:text-6xl lg:text-7xl font-bold text-espresso text-center max-w-4xl leading-tight mt-[-4vh]"
         >
           <span className="word inline-block">Neighbors</span>{' '}
           <span className="word inline-block">helping</span>{' '}
@@ -204,11 +222,24 @@ export function HeroSection() {
 
         {/* CTA Buttons */}
         <div ref={ctaRef} className="mt-8 flex flex-col sm:flex-row items-center gap-4">
-          <button className="vintage-red-btn flex items-center gap-2 text-base">
+          <button
+            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            className="vintage-red-btn flex items-center gap-2 text-base"
+          >
             <Mail className="w-4 h-4" />
             Subscribe to the newsletter
           </button>
         </div>
+
+        {/* Scroll indicator */}
+        <button
+          ref={scrollIndicatorRef}
+          onClick={() => document.getElementById('at-a-glance')?.scrollIntoView({ behavior: 'smooth' })}
+          className="mt-4 text-warm-brown/50 hover:text-warm-brown transition-colors"
+          aria-label="Scroll to content"
+        >
+          <ChevronDown className="w-5 h-5 animate-bounce" />
+        </button>
 
         {/* Starburst Seal */}
         <div

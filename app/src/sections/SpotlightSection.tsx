@@ -93,6 +93,7 @@ export function SpotlightSection() {
             <img
               src="/images/spotlight-portrait.jpg"
               alt="Darnell and Rosa T."
+              loading="lazy"
               className="portrait w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-espresso/50 via-transparent to-transparent md:bg-gradient-to-r" />

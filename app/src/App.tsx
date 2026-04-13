@@ -1,21 +1,23 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Navigation } from '@/components/Navigation';
 import { QuickActionButton } from '@/components/QuickActionButton';
 import { HeroSection } from '@/sections/HeroSection';
 import { AtAGlanceSection } from '@/sections/AtAGlanceSection';
-import { NeedsSection } from '@/sections/NeedsSection';
-import { EventsSection } from '@/sections/EventsSection';
-import { PollSection } from '@/sections/PollSection';
-import { StorySection } from '@/sections/StorySection';
-import { GardenTipSection } from '@/sections/GardenTipSection';
-import { BusinessAdsSection } from '@/sections/BusinessAdsSection';
-import { SpotlightSection } from '@/sections/SpotlightSection';
-import { ShoutoutsSection } from '@/sections/ShoutoutsSection';
-import { ResourcesSection } from '@/sections/ResourcesSection';
-import { ContactSection } from '@/sections/ContactSection';
 import './App.css';
+
+// Lazy-load below-fold sections to reduce initial bundle size
+const NeedsSection = lazy(() => import('@/sections/NeedsSection').then(m => ({ default: m.NeedsSection })));
+const EventsSection = lazy(() => import('@/sections/EventsSection').then(m => ({ default: m.EventsSection })));
+const PollSection = lazy(() => import('@/sections/PollSection').then(m => ({ default: m.PollSection })));
+const StorySection = lazy(() => import('@/sections/StorySection').then(m => ({ default: m.StorySection })));
+const GardenTipSection = lazy(() => import('@/sections/GardenTipSection').then(m => ({ default: m.GardenTipSection })));
+const BusinessAdsSection = lazy(() => import('@/sections/BusinessAdsSection').then(m => ({ default: m.BusinessAdsSection })));
+const SpotlightSection = lazy(() => import('@/sections/SpotlightSection').then(m => ({ default: m.SpotlightSection })));
+const ShoutoutsSection = lazy(() => import('@/sections/ShoutoutsSection').then(m => ({ default: m.ShoutoutsSection })));
+const ResourcesSection = lazy(() => import('@/sections/ResourcesSection').then(m => ({ default: m.ResourcesSection })));
+const ContactSection = lazy(() => import('@/sections/ContactSection').then(m => ({ default: m.ContactSection })));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -77,16 +79,18 @@ function App() {
       <main className="relative">
         <HeroSection />
         <AtAGlanceSection />
-        <NeedsSection />
-        <EventsSection />
-        <PollSection />
-        <StorySection />
-        <GardenTipSection />
-        <BusinessAdsSection />
-        <SpotlightSection />
-        <ShoutoutsSection />
-        <ResourcesSection />
-        <ContactSection />
+        <Suspense fallback={null}>
+          <NeedsSection />
+          <EventsSection />
+          <PollSection />
+          <StorySection />
+          <GardenTipSection />
+          <BusinessAdsSection />
+          <SpotlightSection />
+          <ShoutoutsSection />
+          <ResourcesSection />
+          <ContactSection />
+        </Suspense>
       </main>
 
       <QuickActionButton />
