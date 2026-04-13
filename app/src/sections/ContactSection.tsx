@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Mail, PenTool, HandHeart, Store, Send } from 'lucide-react';
+import { Mail, PenTool, HandHeart, Store, Send, ArrowUp } from 'lucide-react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { toast } from 'sonner';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,7 +18,18 @@ export function ContactSection() {
     if (email) {
       setIsSubscribed(true);
       setEmail('');
+      toast.success('You\'re subscribed!', {
+        description: 'Watch your inbox for the next issue of QualityNeighbor.',
+        duration: 5000,
+      });
     }
+  };
+
+  const handleUnsubscribe = () => {
+    setIsSubscribed(false);
+    toast('Unsubscribed', {
+      description: 'You\'ve been removed from the newsletter.',
+    });
   };
 
   useEffect(() => {
@@ -25,7 +37,6 @@ export function ContactSection() {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Content animation
       gsap.fromTo(
         contentRef.current,
         { y: 40, opacity: 0 },
@@ -42,7 +53,6 @@ export function ContactSection() {
         }
       );
 
-      // Form animation
       const form = contentRef.current?.querySelector('form');
       if (form) {
         gsap.fromTo(
@@ -101,9 +111,15 @@ export function ContactSection() {
             </button>
           </form>
         ) : (
-          <div className="max-w-md mx-auto mb-10 p-4 rounded-xl bg-emerald-100 text-emerald-800">
-            <p className="font-medium">Thanks for subscribing!</p>
-            <p className="text-sm">Watch your inbox for the next issue.</p>
+          <div className="max-w-md mx-auto mb-10 p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800">
+            <p className="font-display font-semibold text-lg mb-1">You're subscribed!</p>
+            <p className="text-sm mb-3">Watch your inbox for the next issue.</p>
+            <button
+              onClick={handleUnsubscribe}
+              className="text-xs text-emerald-700 hover:underline"
+            >
+              Unsubscribe
+            </button>
           </div>
         )}
 
@@ -111,6 +127,7 @@ export function ContactSection() {
         <div className="flex flex-wrap justify-center gap-3 mb-12">
           <a
             href="#needs"
+            onClick={(e) => { e.preventDefault(); document.getElementById('needs')?.scrollIntoView({ behavior: 'smooth' }); }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cream text-espresso hover:bg-vintage-red hover:text-cream transition-colors"
           >
             <HandHeart className="w-4 h-4" />
@@ -118,6 +135,7 @@ export function ContactSection() {
           </a>
           <a
             href="#story"
+            onClick={(e) => { e.preventDefault(); document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' }); }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cream text-espresso hover:bg-vintage-red hover:text-cream transition-colors"
           >
             <PenTool className="w-4 h-4" />
@@ -125,6 +143,7 @@ export function ContactSection() {
           </a>
           <a
             href="#business-ads"
+            onClick={(e) => { e.preventDefault(); document.getElementById('business-ads')?.scrollIntoView({ behavior: 'smooth' }); }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cream text-espresso hover:bg-vintage-red hover:text-cream transition-colors"
           >
             <Store className="w-4 h-4" />
@@ -134,25 +153,39 @@ export function ContactSection() {
 
         {/* Footer */}
         <footer className="pt-8 border-t border-espresso/10">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="text-left">
-              <p className="font-display font-bold text-espresso">QualityNeighbor</p>
+              <p className="font-display text-lg font-bold text-espresso">QualityNeighbor</p>
               <p className="text-sm text-warm-brown">Hartland Ranch • Lockhart, TX</p>
+              <p className="text-xs text-warm-brown/50 mt-1">Published monthly, every first week</p>
             </div>
 
-            <div className="flex items-center gap-4 text-sm">
-              <a href="#" className="text-warm-brown hover:text-espresso transition-colors">
-                Privacy
-              </a>
-              <a href="#" className="text-warm-brown hover:text-espresso transition-colors">
-                Contact
-              </a>
+            <div className="flex flex-col items-end gap-3">
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="inline-flex items-center gap-1.5 text-sm text-warm-brown hover:text-vintage-red transition-colors"
+                aria-label="Back to top"
+              >
+                <ArrowUp className="w-4 h-4" />
+                Back to top
+              </button>
+              <div className="flex items-center gap-4 text-sm">
+                <a href="#" className="text-warm-brown hover:text-espresso transition-colors">
+                  Privacy
+                </a>
+                <a href="#" className="text-warm-brown hover:text-espresso transition-colors">
+                  Contact
+                </a>
+              </div>
             </div>
           </div>
 
-          <p className="mt-6 text-xs text-warm-brown/60">
-            © 2026 QualityNeighbor. Built for Hartland Ranch.
-          </p>
+          <div className="mt-6 pt-6 border-t border-espresso/10 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p className="text-xs text-warm-brown/60">
+              © 2026 QualityNeighbor. Built for Hartland Ranch.
+            </p>
+            <p className="text-xs text-warm-brown/40">Issue 04 • April 2026</p>
+          </div>
         </footer>
       </div>
     </section>

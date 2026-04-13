@@ -15,6 +15,18 @@ main > section:first-child {
   z-index: 10;
 }
 
+/* Subtle top border between adjacent sections for editorial rhythm */
+main > section + section::before {
+  content: '';
+  display: block;
+  height: 1px;
+  background: hsl(var(--espresso) / 0.08);
+  position: absolute;
+  top: 0;
+  left: 4%;
+  right: 4%;
+}
+
 /* Card hover effects */
 .paper-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -43,10 +55,11 @@ input:focus-visible {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  
+
   .animate-pulse-subtle,
   .animate-rotate-slow,
-  .animate-float {
+  .animate-float,
+  .animate-bounce {
     animation: none !important;
   }
 }
@@ -56,7 +69,7 @@ input:focus-visible {
   .paper-card:hover {
     transform: none;
   }
-  
+
   .vintage-red-btn:hover {
     transform: none;
   }
@@ -67,12 +80,12 @@ input:focus-visible {
   .paper-grain::before {
     display: none;
   }
-  
+
   nav,
   .fixed {
     display: none !important;
   }
-  
+
   section {
     break-inside: avoid;
     page-break-inside: avoid;

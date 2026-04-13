@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Menu, Mail } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
@@ -11,17 +11,47 @@ const navLinks = [
   { label: 'Contact', href: '#contact' },
 ];
 
+const sectionIds = ['needs', 'events', 'story', 'garden-tip', 'business-ads', 'contact'];
+
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeSection, setActiveSection] = useState<string>('');
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 100);
+
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(docHeight > 0 ? (scrollTop / docHeight) * 100 : 0);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Active section via IntersectionObserver
+  useEffect(() => {
+    const sectionEls = sectionIds
+      .map(id => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[];
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '-40% 0px -50% 0px', threshold: 0 }
+    );
+
+    sectionEls.forEach(el => observerRef.current!.observe(el));
+    return () => observerRef.current?.disconnect();
   }, []);
 
   const scrollToSection = (href: string) => {
@@ -40,6 +70,13 @@ export function Navigation() {
           : 'bg-transparent py-4'
       }`}
     >
+      {/* Scroll progress bar */}
+      <div
+        className="absolute top-0 left-0 h-0.5 bg-vintage-red transition-all duration-75 origin-left"
+        style={{ width: `${scrollProgress}%` }}
+        aria-hidden="true"
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -56,19 +93,30 @@ export function Navigation() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection(link.href);
-                }}
-                className="text-sm text-warm-brown hover:text-espresso transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const sectionId = link.href.replace('#', '');
+              const isActive = activeSection === sectionId;
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection(link.href);
+                  }}
+                  className={`text-sm transition-colors relative ${
+                    isActive
+                      ? 'text-vintage-red font-medium'
+                      : 'text-warm-brown hover:text-espresso'
+                  }`}
+                >
+                  {link.label}
+                  {isActive && (
+                    <span className="absolute -bottom-1 left-0 right-0 h-px bg-vintage-red rounded-full" />
+                  )}
+                </a>
+              );
+            })}
             <a
               href="#contact"
               onClick={(e) => {
@@ -97,19 +145,27 @@ export function Navigation() {
                 </div>
 
                 <nav className="space-y-1 flex-1">
-                  {navLinks.map((link) => (
-                    <a
-                      key={link.label}
-                      href={link.href}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        scrollToSection(link.href);
-                      }}
-                      className="block px-4 py-3 rounded-xl text-espresso hover:bg-paper-secondary transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  ))}
+                  {navLinks.map((link) => {
+                    const sectionId = link.href.replace('#', '');
+                    const isActive = activeSection === sectionId;
+                    return (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          scrollToSection(link.href);
+                        }}
+                        className={`block px-4 py-3 rounded-xl transition-colors ${
+                          isActive
+                            ? 'bg-vintage-red/10 text-vintage-red font-medium'
+                            : 'text-espresso hover:bg-paper-secondary'
+                        }`}
+                      >
+                        {link.label}
+                      </a>
+                    );
+                  })}
                 </nav>
 
                 <a

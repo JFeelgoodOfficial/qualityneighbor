@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Calendar, Clock, MapPin, ArrowRight, Plus } from 'lucide-react';
+import { Calendar, Clock, MapPin, ArrowRight, CalendarPlus } from 'lucide-react';
 import { useCountdown } from '@/hooks/useCountdown';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -14,37 +14,57 @@ interface Event {
   location: string;
   description: string;
   image: string;
+  // ISO date strings for calendar link generation
+  startISO: string;
+  endISO: string;
 }
 
 const eventsData: Event[] = [
   {
     id: '1',
     title: 'Block Party on Bluebonnet',
-    date: 'Sat, Aug 15',
+    date: 'Sat, Apr 19',
     time: '5–8pm',
     location: 'Bluebonnet Lane',
     description: 'Potluck, music, and a kids\' bike parade. Bring a dish to share!',
     image: '/images/event-block-party.jpg',
+    startISO: '20260419T170000',
+    endISO: '20260419T200000',
   },
   {
     id: '2',
     title: 'Yard Sale Trail',
-    date: 'Sat, Aug 22',
+    date: 'Sat, Apr 26',
     time: '8am–12pm',
     location: 'Throughout the neighborhood',
     description: 'Map pickup at the clubhouse. Find treasures from your neighbors!',
     image: '/images/event-yard-sale.jpg',
+    startISO: '20260426T080000',
+    endISO: '20260426T120000',
   },
   {
     id: '3',
     title: 'Garden Walk & Talk',
-    date: 'Sun, Aug 24',
+    date: 'Sun, Apr 27',
     time: '9am',
     location: 'Meet at Community Garden',
     description: 'Tour three neighbor gardens + Q&A with local gardening enthusiasts.',
     image: '/images/event-garden-walk.jpg',
+    startISO: '20260427T090000',
+    endISO: '20260427T110000',
   },
 ];
+
+function buildGoogleCalendarUrl(event: Event): string {
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: event.title,
+    dates: `${event.startISO}/${event.endISO}`,
+    details: event.description,
+    location: `${event.location}, Hartland Ranch, Lockhart, TX`,
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
 
 function CountdownPill({ targetDate }: { targetDate: Date }) {
   const { days, hours, minutes, isExpired } = useCountdown(targetDate);
@@ -69,17 +89,14 @@ export function EventsSection() {
   const headerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
 
-  // Set next event date (example: 5 days from now)
-  const nextEventDate = new Date();
-  nextEventDate.setDate(nextEventDate.getDate() + 5);
-  nextEventDate.setHours(17, 0, 0, 0);
+  // Next event: Block Party on Apr 19, 2026
+  const nextEventDate = new Date('2026-04-19T17:00:00');
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Header animation
       gsap.fromTo(
         headerRef.current,
         { x: '-6vw', opacity: 0 },
@@ -96,7 +113,6 @@ export function EventsSection() {
         }
       );
 
-      // Cards stagger animation
       const cards = cardsRef.current?.querySelectorAll('.event-card');
       if (cards) {
         gsap.fromTo(
@@ -127,7 +143,7 @@ export function EventsSection() {
       ref={sectionRef}
       id="events"
       className="relative w-full py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 xl:px-12"
-      style={{ background: 'hsl(var(--paper-primary))' }}
+      style={{ background: 'hsl(var(--paper-secondary))' }}
     >
       {/* Header with countdown */}
       <div ref={headerRef} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
@@ -156,7 +172,7 @@ export function EventsSection() {
               />
               <div className="absolute top-3 left-3">
                 <span className="category-pill bg-cream/90 text-espresso backdrop-blur-sm">
-                  <Calendar className="w-3 h-3 mr-1" />
+                  <Calendar className="w-3 h-3 mr-1 inline-block" />
                   {event.date}
                 </span>
               </div>
@@ -183,10 +199,16 @@ export function EventsSection() {
                 {event.description}
               </p>
 
-              <button className="flex items-center gap-1.5 text-sm text-vintage-red font-medium hover:gap-2 transition-all">
-                <Plus className="w-4 h-4" />
+              <a
+                href={buildGoogleCalendarUrl(event)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm text-vintage-red font-medium hover:gap-2 transition-all"
+                aria-label={`Add ${event.title} to Google Calendar`}
+              >
+                <CalendarPlus className="w-4 h-4" />
                 Add to calendar
-              </button>
+              </a>
             </div>
           </div>
         ))}
@@ -194,10 +216,17 @@ export function EventsSection() {
 
       {/* View All CTA */}
       <div className="mt-8 text-center">
-        <button className="inline-flex items-center gap-2 text-vintage-red font-medium hover:underline">
-          View all events
+        <a
+          href="#contact"
+          onClick={(e) => {
+            e.preventDefault();
+            document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="inline-flex items-center gap-2 text-vintage-red font-medium hover:underline"
+        >
+          Get event updates in your inbox
           <ArrowRight className="w-4 h-4" />
-        </button>
+        </a>
       </div>
     </section>
   );

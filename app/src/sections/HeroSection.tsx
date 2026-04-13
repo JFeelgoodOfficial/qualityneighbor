@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Mail } from 'lucide-react';
+import { Mail, ChevronDown } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,6 +13,17 @@ export function HeroSection() {
   const ctaRef = useRef<HTMLDivElement>(null);
   const sealRef = useRef<HTMLDivElement>(null);
   const mastheadRef = useRef<HTMLDivElement>(null);
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+
+  const scrollToContact = () => {
+    const el = document.getElementById('contact');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollDown = () => {
+    const el = document.getElementById('at-a-glance');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -73,6 +84,14 @@ export function HeroSection() {
         0.9
       );
 
+      // Scroll indicator
+      loadTl.fromTo(
+        scrollIndicatorRef.current,
+        { y: 8, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.35 },
+        1.1
+      );
+
       // Scroll-driven exit animation
       const scrollTl = gsap.timeline({
         scrollTrigger: {
@@ -83,19 +102,15 @@ export function HeroSection() {
           scrub: 0.6,
           pinSpacing: true,
           onLeaveBack: () => {
-            // Reset all elements to visible when scrolling back to top
-            gsap.set([headlineRef.current, subheadRef.current, badgeRef.current, ctaRef.current, sealRef.current, mastheadRef.current], {
-              opacity: 1, x: 0, y: 0, scale: 1, rotate: 0
-            });
+            gsap.set(
+              [headlineRef.current, subheadRef.current, badgeRef.current, ctaRef.current, sealRef.current, mastheadRef.current, scrollIndicatorRef.current],
+              { opacity: 1, x: 0, y: 0, scale: 1, rotate: 0 }
+            );
           }
         }
       });
 
-      // ENTRANCE (0-30%): Hold - elements already visible from load animation
-      // SETTLE (30-70%): Hold
       // EXIT (70-100%): Elements exit
-
-      // Headline exit
       scrollTl.fromTo(
         headlineRef.current,
         { y: 0, opacity: 1 },
@@ -103,7 +118,6 @@ export function HeroSection() {
         0.7
       );
 
-      // Subheadline exit
       scrollTl.fromTo(
         subheadRef.current,
         { y: 0, opacity: 1 },
@@ -111,7 +125,6 @@ export function HeroSection() {
         0.72
       );
 
-      // Badge exit (left)
       scrollTl.fromTo(
         badgeRef.current,
         { x: 0, opacity: 1 },
@@ -119,7 +132,6 @@ export function HeroSection() {
         0.75
       );
 
-      // Seal exit (right)
       scrollTl.fromTo(
         sealRef.current,
         { x: 0, rotate: 0, opacity: 1 },
@@ -127,7 +139,6 @@ export function HeroSection() {
         0.75
       );
 
-      // CTA exit
       scrollTl.fromTo(
         ctaRef.current,
         { y: 0, opacity: 1 },
@@ -135,7 +146,13 @@ export function HeroSection() {
         0.78
       );
 
-      // Masthead exit
+      scrollTl.fromTo(
+        scrollIndicatorRef.current,
+        { y: 0, opacity: 1 },
+        { y: '6vh', opacity: 0, ease: 'power2.in' },
+        0.78
+      );
+
       scrollTl.fromTo(
         mastheadRef.current,
         { y: 0, opacity: 1 },
@@ -198,13 +215,16 @@ export function HeroSection() {
         {/* Issue Badge */}
         <div ref={badgeRef} className="mt-10">
           <span className="category-pill-red text-sm px-4 py-2">
-            Issue 04 • August 2026
+            Issue 04 • April 2026
           </span>
         </div>
 
         {/* CTA Buttons */}
         <div ref={ctaRef} className="mt-8 flex flex-col sm:flex-row items-center gap-4">
-          <button className="vintage-red-btn flex items-center gap-2 text-base">
+          <button
+            onClick={scrollToContact}
+            className="vintage-red-btn flex items-center gap-2 text-base"
+          >
             <Mail className="w-4 h-4" />
             Subscribe to the newsletter
           </button>
@@ -229,7 +249,8 @@ export function HeroSection() {
               y="55"
               textAnchor="middle"
               fill="hsl(var(--cream))"
-              className="font-display text-[10px] font-bold"
+              fontSize="10"
+              fontWeight="bold"
             >
               Hartland
             </text>
@@ -238,11 +259,26 @@ export function HeroSection() {
               y="70"
               textAnchor="middle"
               fill="hsl(var(--cream))"
-              className="font-display text-[10px] font-bold"
+              fontSize="10"
+              fontWeight="bold"
             >
               Ranch
             </text>
           </svg>
+        </div>
+
+        {/* Scroll indicator */}
+        <div
+          ref={scrollIndicatorRef}
+          className="absolute bottom-[6vh] left-0 right-0 flex flex-col items-center gap-1 cursor-pointer"
+          onClick={scrollDown}
+          role="button"
+          aria-label="Scroll down"
+        >
+          <span className="font-mono text-xs uppercase tracking-widest text-warm-brown/60">
+            Scroll to explore
+          </span>
+          <ChevronDown className="w-5 h-5 text-warm-brown/50 animate-bounce" />
         </div>
       </div>
     </section>
