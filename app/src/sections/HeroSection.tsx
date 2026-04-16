@@ -209,7 +209,7 @@ export function HeroSection() {
           ref={subheadRef}
           className="mt-6 text-lg sm:text-xl text-warm-brown text-center max-w-xl leading-relaxed"
         >
-          The monthly newsletter for Hartland Ranch—needs, events, stories, and local gems.
+          The monthly newsletter for Hartland Ranch—events, stories, and local gems.
         </p>
 
         {/* Issue Badge */}
