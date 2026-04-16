@@ -1,9 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight, MessageSquare, ShoppingBag, Wrench } from 'lucide-react';
-
-gsap.registerPlugin(ScrollTrigger);
+import { ArrowRight, ShoppingBag, Wrench } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 interface BusinessAd {
   id: string;
@@ -11,7 +10,7 @@ interface BusinessAd {
   tagline: string;
   cta: string;
   image: string;
-  icon: typeof MessageSquare;
+  icon: LucideIcon;
 }
 
 const adsData: BusinessAd[] = [
@@ -45,13 +44,14 @@ export function BusinessAdsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+    if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
-      // Header animation
       gsap.fromTo(
         headerRef.current,
         { y: 16, opacity: 0 },
@@ -68,7 +68,6 @@ export function BusinessAdsSection() {
         }
       );
 
-      // Cards stagger
       const cards = cardsRef.current?.querySelectorAll('.ad-card');
       if (cards) {
         gsap.fromTo(
@@ -92,7 +91,7 @@ export function BusinessAdsSection() {
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <section
@@ -101,7 +100,6 @@ export function BusinessAdsSection() {
       className="relative w-full py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 xl:px-12"
       style={{ background: 'hsl(var(--paper-secondary))' }}
     >
-      {/* Header */}
       <div ref={headerRef} className="section-header mb-10">
         <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-espresso pb-4">
           Local Business Ads
@@ -112,7 +110,6 @@ export function BusinessAdsSection() {
         </p>
       </div>
 
-      {/* Ads Grid */}
       <div ref={cardsRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {adsData.map((ad) => {
           const Icon = ad.icon;
@@ -121,11 +118,11 @@ export function BusinessAdsSection() {
               key={ad.id}
               className="ad-card paper-card rounded-2xl overflow-hidden group hover:shadow-card-hover transition-all duration-300"
             >
-              {/* Image */}
               <div className="relative h-44 overflow-hidden">
                 <img
                   src={ad.image}
                   alt={ad.name}
+                  loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute top-3 right-3">
@@ -135,7 +132,6 @@ export function BusinessAdsSection() {
                 </div>
               </div>
 
-              {/* Content */}
               <div className="p-5">
                 <h3 className="font-display text-lg font-semibold text-espresso mb-1 group-hover:text-vintage-red transition-colors">
                   {ad.name}
@@ -153,7 +149,6 @@ export function BusinessAdsSection() {
         })}
       </div>
 
-      {/* Claim Ad CTA */}
       <div className="mt-10 text-center">
         <div className="inline-flex flex-col sm:flex-row items-center gap-4 p-6 rounded-2xl bg-paper-secondary/50">
           <div>

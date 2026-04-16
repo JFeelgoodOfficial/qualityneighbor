@@ -1,9 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Mail, ChevronDown, Calendar, BookOpen, Leaf } from 'lucide-react';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 const previewItems = [
   {
@@ -55,6 +53,8 @@ export function HeroSection() {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const prefersReducedMotion = useReducedMotion();
+
   const scrollToSection = (href: string) => {
     const el = document.querySelector(href);
     if (el) (el as HTMLElement).scrollIntoView({ behavior: 'smooth' });
@@ -63,6 +63,7 @@ export function HeroSection() {
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+    if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
       const loadTl = gsap.timeline({ defaults: { ease: 'power2.out' } });
@@ -205,7 +206,7 @@ export function HeroSection() {
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <section
@@ -322,7 +323,9 @@ export function HeroSection() {
           ref={scrollIndicatorRef}
           className="flex flex-col items-center gap-1 mt-4 cursor-pointer"
           onClick={scrollDown}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') scrollDown(); }}
           role="button"
+          tabIndex={0}
           aria-label="Scroll down"
         >
           <ChevronDown className="w-5 h-5 text-warm-brown/40 animate-bounce" />

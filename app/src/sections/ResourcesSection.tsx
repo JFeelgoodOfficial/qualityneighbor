@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
   FileText,
   Trash2,
@@ -16,8 +15,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 const quickLinks = [
   { label: 'HOA Contact & Documents', icon: FileText, href: '#' },
@@ -47,10 +45,12 @@ export function ResourcesSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const leftRef = useRef<HTMLDivElement>(null);
   const rightRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+    if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
       // Left column animation
@@ -110,7 +110,7 @@ export function ResourcesSection() {
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <section

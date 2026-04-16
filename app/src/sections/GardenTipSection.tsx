@@ -1,10 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Droplets, Sun, Shovel, Scissors, Bookmark, Check } from 'lucide-react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 const tips = [
   {
@@ -29,10 +27,12 @@ export function GardenTipSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const [saved, setSaved] = useLocalStorage<boolean>('garden-tip-saved', false);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+    if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
       // Card animation
@@ -75,7 +75,7 @@ export function GardenTipSection() {
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <section
@@ -94,6 +94,7 @@ export function GardenTipSection() {
             <img
               src="/images/garden-tip.jpg"
               alt="Watering a tomato plant"
+              loading="lazy"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-espresso/40 to-transparent md:bg-gradient-to-r" />

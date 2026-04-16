@@ -1,9 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight, Calendar, Leaf, Store, Star } from 'lucide-react';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 const quickLinks = [
   { label: 'Upcoming Events', icon: Calendar, href: '#events' },
@@ -17,13 +15,14 @@ export function AtAGlanceSection() {
   const headerRef = useRef<HTMLDivElement>(null);
   const featuredRef = useRef<HTMLDivElement>(null);
   const linksRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+    if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
-      // Header animation
       gsap.fromTo(
         headerRef.current,
         { x: '-6vw', opacity: 0 },
@@ -40,7 +39,6 @@ export function AtAGlanceSection() {
         }
       );
 
-      // Featured card animation
       gsap.fromTo(
         featuredRef.current,
         { x: '-10vw', opacity: 0, rotate: -1 },
@@ -58,7 +56,6 @@ export function AtAGlanceSection() {
         }
       );
 
-      // Quick links card animation
       gsap.fromTo(
         linksRef.current,
         { x: '10vw', opacity: 0, rotate: 1 },
@@ -76,7 +73,6 @@ export function AtAGlanceSection() {
         }
       );
 
-      // Stagger link items
       const linkItems = linksRef.current?.querySelectorAll('.link-item');
       if (linkItems) {
         gsap.fromTo(
@@ -99,7 +95,7 @@ export function AtAGlanceSection() {
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <section
@@ -108,7 +104,6 @@ export function AtAGlanceSection() {
       className="relative w-full py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 xl:px-12"
       style={{ background: 'hsl(var(--paper-secondary))' }}
     >
-      {/* Section Header */}
       <div ref={headerRef} className="section-header mb-10">
         <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-espresso pb-4">
           This month at a glance
@@ -116,41 +111,41 @@ export function AtAGlanceSection() {
         <div className="w-44 h-0.5 bg-espresso/20" />
       </div>
 
-      {/* Two Column Layout */}
       <div className="grid lg:grid-cols-5 gap-6 lg:gap-8">
-        {/* Featured Story Card */}
+        {/* Featured — Neighbor Spotlight (different from hero preview) */}
         <div
           ref={featuredRef}
           className="lg:col-span-3 paper-card rounded-2xl overflow-hidden group cursor-pointer hover:shadow-card-hover transition-shadow duration-300"
         >
           <div className="relative h-56 sm:h-64 lg:h-72 overflow-hidden">
             <img
-              src="/images/story-library-1.jpg"
-              alt="Little Free Library"
+              src="/images/spotlight-portrait.jpg"
+              alt="Darnell and Rosa T., block captains"
+              loading="lazy"
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute top-4 left-4">
-              <span className="category-pill-red">Featured Story</span>
+              <span className="category-pill-red">Neighbor Spotlight</span>
             </div>
           </div>
           <div className="p-6 sm:p-8">
             <h3 className="font-display text-xl sm:text-2xl lg:text-3xl font-semibold text-espresso mb-3 group-hover:text-vintage-red transition-colors">
-              The Little Free Library That Keeps Giving
+              Darnell & Rosa T. — Block Captains, Bluebonnet Lane
             </h3>
             <p className="text-warm-brown leading-relaxed mb-4">
-              How one corner book swap became a daily stop for neighbors—and what's next for our community reading spot.
+              From cookies-as-introductions to organizing the annual yard sale trail—meet the neighbors who keep Bluebonnet buzzing.
             </p>
             <a
-              href="#story"
+              href="#spotlight"
               className="inline-flex items-center gap-2 text-vintage-red font-medium hover:gap-3 transition-all"
             >
-              Read the story
+              Read the spotlight
               <ArrowRight className="w-4 h-4" />
             </a>
           </div>
         </div>
 
-        {/* Quick Links Card */}
+        {/* Quick Links */}
         <div
           ref={linksRef}
           className="lg:col-span-2 paper-card rounded-2xl p-6 sm:p-8"

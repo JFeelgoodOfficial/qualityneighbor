@@ -1,18 +1,18 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight, User, Calendar } from 'lucide-react';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export function StorySection() {
   const sectionRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+    if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
       // Text column animation
@@ -67,7 +67,7 @@ export function StorySection() {
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <section
@@ -132,6 +132,7 @@ export function StorySection() {
               <img
                 src="/images/story-library-1.jpg"
                 alt="Little Free Library on the sidewalk"
+                loading="lazy"
                 className="w-full h-64 sm:h-80 object-cover"
               />
             </div>
@@ -141,6 +142,7 @@ export function StorySection() {
               <img
                 src="/images/story-library-2.jpg"
                 alt="Books inside the library"
+                loading="lazy"
                 className="w-full h-40 sm:h-48 object-cover"
               />
             </div>

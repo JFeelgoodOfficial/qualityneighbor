@@ -1,10 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Calendar, Clock, MapPin, ArrowRight, CalendarPlus } from 'lucide-react';
 import { useCountdown } from '@/hooks/useCountdown';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 interface Event {
   id: string;
@@ -88,6 +86,7 @@ export function EventsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   // Next event: Block Party on Apr 19, 2026
   const nextEventDate = new Date('2026-04-19T17:00:00');
@@ -95,6 +94,7 @@ export function EventsSection() {
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+    if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
@@ -136,7 +136,7 @@ export function EventsSection() {
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <section
@@ -168,6 +168,7 @@ export function EventsSection() {
               <img
                 src={event.image}
                 alt={event.title}
+                loading="lazy"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute top-3 left-3">

@@ -1,17 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Mail, PenTool, Store, Send, ArrowUp } from 'lucide-react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { toast } from 'sonner';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export function ContactSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useLocalStorage<boolean>('newsletter-subscribed', false);
+  const prefersReducedMotion = useReducedMotion();
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +34,7 @@ export function ContactSection() {
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+    if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
@@ -74,7 +74,7 @@ export function ContactSection() {
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <section
