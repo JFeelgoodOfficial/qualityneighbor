@@ -42,6 +42,7 @@ export function HeroSection() {
   const sealRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const tornOverlayRef = useRef<HTMLDivElement>(null);
 
   const scrollToContact = () => {
     const el = document.getElementById('contact');
@@ -130,7 +131,7 @@ export function HeroSection() {
         1.1
       );
 
-      // Scroll-driven exit animation — pinned for only 60% of viewport height
+      // Torn paper reveal — overlay rises from below to cover the hero
       const allRefs = [
         headlineRef.current,
         subheadRef.current,
@@ -141,67 +142,31 @@ export function HeroSection() {
         scrollIndicatorRef.current,
       ];
 
+      gsap.set(tornOverlayRef.current, { visibility: 'hidden' });
+
       const scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: 'top top',
-          end: '+=60%',
+          end: '+=80%',
           pin: true,
           scrub: 0.6,
           pinSpacing: true,
+          onEnter: () => {
+            if (tornOverlayRef.current) tornOverlayRef.current.style.visibility = 'visible';
+          },
           onLeaveBack: () => {
             gsap.set(allRefs, { opacity: 1, x: 0, y: 0, scale: 1, rotate: 0 });
+            if (tornOverlayRef.current) tornOverlayRef.current.style.visibility = 'hidden';
           },
         },
       });
 
       scrollTl.fromTo(
-        headlineRef.current,
-        { y: 0, opacity: 1 },
-        { y: '-18vh', opacity: 0, ease: 'power2.in' },
-        0.6
-      );
-
-      scrollTl.fromTo(
-        subheadRef.current,
-        { y: 0, opacity: 1 },
-        { y: '-14vh', opacity: 0, ease: 'power2.in' },
-        0.62
-      );
-
-      scrollTl.fromTo(
-        datelineRef.current,
-        { opacity: 1 },
-        { opacity: 0, ease: 'power2.in' },
-        0.65
-      );
-
-      scrollTl.fromTo(
-        sealRef.current,
-        { x: 0, rotate: 0, opacity: 1 },
-        { x: '8vw', rotate: 18, opacity: 0, ease: 'power2.in' },
-        0.65
-      );
-
-      scrollTl.fromTo(
-        ctaRef.current,
-        { y: 0, opacity: 1 },
-        { y: '8vh', opacity: 0, ease: 'power2.in' },
-        0.68
-      );
-
-      scrollTl.fromTo(
-        previewRef.current,
-        { y: 0, opacity: 1 },
-        { y: '12vh', opacity: 0, ease: 'power2.in' },
-        0.7
-      );
-
-      scrollTl.fromTo(
-        scrollIndicatorRef.current,
-        { y: 0, opacity: 1 },
-        { y: '6vh', opacity: 0, ease: 'power2.in' },
-        0.72
+        tornOverlayRef.current,
+        { y: '0%' },
+        { y: '-100%', ease: 'none' },
+        0
       );
     }, section);
 
@@ -211,11 +176,11 @@ export function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-screen overflow-hidden z-10 flex flex-col"
+      className="relative w-full h-screen z-10 flex flex-col"
       style={{ background: 'linear-gradient(180deg, hsl(var(--paper-primary)) 0%, hsl(var(--paper-secondary)) 100%)' }}
     >
       {/* Background vignette image */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 overflow-hidden z-0">
         <img
           src="/images/hero-vignette.jpg"
           alt="Hartland Ranch neighborhood"
@@ -330,6 +295,34 @@ export function HeroSection() {
         >
           <ChevronDown className="w-5 h-5 text-warm-brown/40 animate-bounce" />
         </div>
+      </div>
+
+      {/* Torn paper overlay — rises from below on scroll to reveal next section */}
+      <div
+        ref={tornOverlayRef}
+        className="absolute left-0 w-full z-30 pointer-events-none"
+        style={{ top: '100%', height: '100%', visibility: 'hidden' }}
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 1440 60"
+          preserveAspectRatio="none"
+          className="absolute w-full"
+          style={{
+            top: '-59px',
+            height: '60px',
+            filter: 'drop-shadow(0px -4px 8px rgba(43, 31, 22, 0.15))',
+          }}
+        >
+          <path
+            d="M0,28 L12,18 L22,32 L35,12 L48,30 L58,8 L72,24 L82,38 L95,20 L108,35 L118,14 L130,28 L145,6 L158,22 L170,38 L182,16 L196,30 L208,10 L220,26 L234,40 L248,18 L262,34 L272,12 L286,28 L298,5 L312,22 L325,38 L340,14 L355,30 L368,8 L382,24 L395,40 L408,16 L422,32 L435,10 L450,28 L462,42 L476,18 L490,34 L504,12 L518,26 L530,40 L545,20 L558,35 L572,8 L586,28 L598,14 L614,30 L628,5 L642,22 L654,38 L668,16 L682,32 L695,10 L710,26 L724,42 L738,18 L752,34 L766,12 L780,28 L792,5 L806,22 L820,38 L834,16 L848,30 L860,8 L875,24 L888,40 L902,18 L916,35 L930,12 L944,28 L958,6 L972,22 L985,38 L998,14 L1012,30 L1026,8 L1040,26 L1052,40 L1066,18 L1080,34 L1095,12 L1108,28 L1122,5 L1136,22 L1148,38 L1162,16 L1176,30 L1190,10 L1204,26 L1218,42 L1232,18 L1246,35 L1260,12 L1274,28 L1286,6 L1300,22 L1314,38 L1328,16 L1342,32 L1356,10 L1370,28 L1382,42 L1396,18 L1410,34 L1424,14 L1440,28 L1440,60 L0,60 Z"
+            fill="hsl(var(--paper-primary))"
+          />
+        </svg>
+        <div
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(180deg, hsl(var(--paper-primary)) 0%, hsl(var(--paper-secondary)) 100%)' }}
+        />
       </div>
     </section>
   );
