@@ -1,12 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight, Users, Calendar, Leaf, Store, Star } from 'lucide-react';
+import { ArrowRight, Calendar, Leaf, Store, Star } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const quickLinks = [
-  { label: 'Neighborly Needs', icon: Users, href: '#needs' },
   { label: 'Upcoming Events', icon: Calendar, href: '#events' },
   { label: 'Garden Tip', icon: Leaf, href: '#garden-tip' },
   { label: 'Local Ads', icon: Store, href: '#business-ads' },
