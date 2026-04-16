@@ -1,18 +1,48 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Mail, ChevronDown } from 'lucide-react';
+import { Mail, ChevronDown, Calendar, BookOpen, Leaf } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const previewItems = [
+  {
+    id: 'events',
+    label: 'Events',
+    labelClass: 'bg-vintage-red/10 text-vintage-red',
+    Icon: Calendar,
+    title: 'Block Party on Bluebonnet',
+    detail: 'Sat, Apr 19 · 5–8pm',
+    href: '#events',
+  },
+  {
+    id: 'story',
+    label: 'Story',
+    labelClass: 'bg-warm-brown/10 text-warm-brown',
+    Icon: BookOpen,
+    title: 'The Little Free Library That Keeps Giving',
+    detail: 'By Marisol V.',
+    href: '#story',
+  },
+  {
+    id: 'garden-tip',
+    label: 'Tips',
+    labelClass: 'bg-emerald-100 text-emerald-800',
+    Icon: Leaf,
+    title: 'Keep Your Garden Happy in August Heat',
+    detail: '4 easy tips',
+    href: '#garden-tip',
+  },
+];
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const subheadRef = useRef<HTMLParagraphElement>(null);
-  const badgeRef = useRef<HTMLDivElement>(null);
+  const datelineRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const sealRef = useRef<HTMLDivElement>(null);
-  const mastheadRef = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
 
   const scrollToContact = () => {
@@ -25,19 +55,23 @@ export function HeroSection() {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const scrollToSection = (href: string) => {
+    const el = document.querySelector(href);
+    if (el) (el as HTMLElement).scrollIntoView({ behavior: 'smooth' });
+  };
+
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Auto-play entrance animation on load
       const loadTl = gsap.timeline({ defaults: { ease: 'power2.out' } });
 
-      // Masthead fade in
+      // Dateline fades in from top
       loadTl.fromTo(
-        mastheadRef.current,
-        { y: -12, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.4 },
+        datelineRef.current,
+        { y: -8, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.35 },
         0
       );
 
@@ -57,15 +91,7 @@ export function HeroSection() {
         subheadRef.current,
         { y: 14, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.4 },
-        0.6
-      );
-
-      // Issue badge
-      loadTl.fromTo(
-        badgeRef.current,
-        { scale: 0.92, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.4 },
-        0.7
+        0.55
       );
 
       // CTA button
@@ -73,7 +99,7 @@ export function HeroSection() {
         ctaRef.current,
         { y: 16, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.35 },
-        0.85
+        0.75
       );
 
       // Starburst seal
@@ -81,8 +107,19 @@ export function HeroSection() {
         sealRef.current,
         { rotate: -12, scale: 0.85, opacity: 0 },
         { rotate: 0, scale: 1, opacity: 1, duration: 0.4 },
-        0.9
+        0.8
       );
+
+      // Preview cards stagger up from below
+      const cards = previewRef.current?.querySelectorAll('.preview-card');
+      if (cards) {
+        loadTl.fromTo(
+          cards,
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.4, stagger: 0.08 },
+          0.9
+        );
+      }
 
       // Scroll indicator
       loadTl.fromTo(
@@ -92,74 +129,79 @@ export function HeroSection() {
         1.1
       );
 
-      // Scroll-driven exit animation
+      // Scroll-driven exit animation — pinned for only 60% of viewport height
+      const allRefs = [
+        headlineRef.current,
+        subheadRef.current,
+        datelineRef.current,
+        ctaRef.current,
+        sealRef.current,
+        previewRef.current,
+        scrollIndicatorRef.current,
+      ];
+
       const scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: 'top top',
-          end: '+=130%',
+          end: '+=60%',
           pin: true,
           scrub: 0.6,
           pinSpacing: true,
           onLeaveBack: () => {
-            gsap.set(
-              [headlineRef.current, subheadRef.current, badgeRef.current, ctaRef.current, sealRef.current, mastheadRef.current, scrollIndicatorRef.current],
-              { opacity: 1, x: 0, y: 0, scale: 1, rotate: 0 }
-            );
-          }
-        }
+            gsap.set(allRefs, { opacity: 1, x: 0, y: 0, scale: 1, rotate: 0 });
+          },
+        },
       });
 
-      // EXIT (70-100%): Elements exit
       scrollTl.fromTo(
         headlineRef.current,
         { y: 0, opacity: 1 },
-        { y: '-22vh', opacity: 0, ease: 'power2.in' },
-        0.7
+        { y: '-18vh', opacity: 0, ease: 'power2.in' },
+        0.6
       );
 
       scrollTl.fromTo(
         subheadRef.current,
         { y: 0, opacity: 1 },
-        { y: '-18vh', opacity: 0, ease: 'power2.in' },
-        0.72
+        { y: '-14vh', opacity: 0, ease: 'power2.in' },
+        0.62
       );
 
       scrollTl.fromTo(
-        badgeRef.current,
-        { x: 0, opacity: 1 },
-        { x: '-10vw', opacity: 0, ease: 'power2.in' },
-        0.75
+        datelineRef.current,
+        { opacity: 1 },
+        { opacity: 0, ease: 'power2.in' },
+        0.65
       );
 
       scrollTl.fromTo(
         sealRef.current,
         { x: 0, rotate: 0, opacity: 1 },
-        { x: '10vw', rotate: 18, opacity: 0, ease: 'power2.in' },
-        0.75
+        { x: '8vw', rotate: 18, opacity: 0, ease: 'power2.in' },
+        0.65
       );
 
       scrollTl.fromTo(
         ctaRef.current,
         { y: 0, opacity: 1 },
-        { y: '10vh', opacity: 0, ease: 'power2.in' },
-        0.78
+        { y: '8vh', opacity: 0, ease: 'power2.in' },
+        0.68
+      );
+
+      scrollTl.fromTo(
+        previewRef.current,
+        { y: 0, opacity: 1 },
+        { y: '12vh', opacity: 0, ease: 'power2.in' },
+        0.7
       );
 
       scrollTl.fromTo(
         scrollIndicatorRef.current,
         { y: 0, opacity: 1 },
         { y: '6vh', opacity: 0, ease: 'power2.in' },
-        0.78
+        0.72
       );
-
-      scrollTl.fromTo(
-        mastheadRef.current,
-        { y: 0, opacity: 1 },
-        { y: -20, opacity: 0, ease: 'power2.in' },
-        0.8
-      );
-
     }, section);
 
     return () => ctx.revert();
@@ -168,7 +210,7 @@ export function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-screen overflow-hidden z-10"
+      className="relative w-full h-screen overflow-hidden z-10 flex flex-col"
       style={{ background: 'linear-gradient(180deg, hsl(var(--paper-primary)) 0%, hsl(var(--paper-secondary)) 100%)' }}
     >
       {/* Background vignette image */}
@@ -181,46 +223,38 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--paper-primary))]/80 via-[hsl(var(--paper-primary))]/60 to-[hsl(var(--paper-primary))]/90" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
-        {/* Masthead */}
-        <div ref={mastheadRef} className="absolute top-[6vh] left-0 right-0 flex flex-col items-center">
-          <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-espresso tracking-tight">
-            QualityNeighbor
-          </h1>
-          <div className="w-28 h-0.5 bg-espresso/30 mt-2" />
-          <p className="font-mono text-xs uppercase tracking-widest text-warm-brown mt-2">
-            Hartland Ranch • Lockhart, TX
-          </p>
-        </div>
+      {/* Dateline — issue + location, top of section */}
+      <div
+        ref={datelineRef}
+        className="relative z-10 pt-[6vh] flex justify-center"
+      >
+        <span className="font-mono text-xs uppercase tracking-widest text-warm-brown/70">
+          Issue 04 · April 2026 · Hartland Ranch, TX
+        </span>
+      </div>
 
+      {/* Center content */}
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
         {/* Hero Headline */}
-        <h2
+        <h1
           ref={headlineRef}
-          className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-espresso text-center max-w-4xl leading-tight mt-[-4vh]"
+          className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-espresso text-center max-w-4xl leading-tight"
         >
           <span className="word inline-block">Neighbors</span>{' '}
           <span className="word inline-block">helping</span>{' '}
           <span className="word inline-block">neighbors.</span>
-        </h2>
+        </h1>
 
         {/* Subheadline */}
         <p
           ref={subheadRef}
-          className="mt-6 text-lg sm:text-xl text-warm-brown text-center max-w-xl leading-relaxed"
+          className="mt-5 text-lg sm:text-xl text-warm-brown text-center max-w-xl leading-relaxed"
         >
           The monthly newsletter for Hartland Ranch—events, stories, and local gems.
         </p>
 
-        {/* Issue Badge */}
-        <div ref={badgeRef} className="mt-10">
-          <span className="category-pill-red text-sm px-4 py-2">
-            Issue 04 • April 2026
-          </span>
-        </div>
-
-        {/* CTA Buttons */}
-        <div ref={ctaRef} className="mt-8 flex flex-col sm:flex-row items-center gap-4">
+        {/* CTA */}
+        <div ref={ctaRef} className="mt-8">
           <button
             onClick={scrollToContact}
             className="vintage-red-btn flex items-center gap-2 text-base"
@@ -229,56 +263,69 @@ export function HeroSection() {
             Subscribe to the newsletter
           </button>
         </div>
+      </div>
 
-        {/* Starburst Seal */}
-        <div
-          ref={sealRef}
-          className="absolute right-[8vw] top-[56vh] hidden lg:block"
+      {/* Starburst Seal — decorative, desktop only */}
+      <div
+        ref={sealRef}
+        className="absolute right-[8vw] top-1/2 -translate-y-1/2 hidden lg:block z-10"
+      >
+        <svg
+          viewBox="0 0 120 120"
+          className="w-28 h-28 animate-rotate-slow"
+          style={{ animationDuration: '30s' }}
         >
-          <svg
-            viewBox="0 0 120 120"
-            className="w-28 h-28 animate-rotate-slow"
-            style={{ animationDuration: '30s' }}
-          >
-            <path
-              d="M60 0L66.5 25.5L85 10L78 35L105 30L88 48L115 55L90 65L110 85L82 80L95 105L68 90L60 115L52 90L25 105L38 80L10 85L30 65L5 55L32 48L15 30L42 35L35 10L53.5 25.5L60 0Z"
-              fill="hsl(var(--vintage-red))"
-            />
-            <text
-              x="60"
-              y="55"
-              textAnchor="middle"
-              fill="hsl(var(--cream))"
-              fontSize="10"
-              fontWeight="bold"
-            >
-              Hartland
-            </text>
-            <text
-              x="60"
-              y="70"
-              textAnchor="middle"
-              fill="hsl(var(--cream))"
-              fontSize="10"
-              fontWeight="bold"
-            >
-              Ranch
-            </text>
-          </svg>
+          <path
+            d="M60 0L66.5 25.5L85 10L78 35L105 30L88 48L115 55L90 65L110 85L82 80L95 105L68 90L60 115L52 90L25 105L38 80L10 85L30 65L5 55L32 48L15 30L42 35L35 10L53.5 25.5L60 0Z"
+            fill="hsl(var(--vintage-red))"
+          />
+          <text x="60" y="55" textAnchor="middle" fill="hsl(var(--cream))" fontSize="10" fontWeight="bold">
+            Hartland
+          </text>
+          <text x="60" y="70" textAnchor="middle" fill="hsl(var(--cream))" fontSize="10" fontWeight="bold">
+            Ranch
+          </text>
+        </svg>
+      </div>
+
+      {/* Bottom: "In this issue" preview + scroll indicator */}
+      <div className="relative z-10 pb-[3.5vh] px-4 sm:px-6 lg:px-8">
+        {/* Preview cards */}
+        <div ref={previewRef}>
+          <p className="font-mono text-xs uppercase tracking-widest text-warm-brown/50 text-center mb-3">
+            In this issue
+          </p>
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 max-w-3xl mx-auto">
+            {previewItems.map(({ id, label, labelClass, Icon, title, detail, href }) => (
+              <button
+                key={id}
+                onClick={() => scrollToSection(href)}
+                className="preview-card flex-1 flex items-center gap-3 bg-cream/70 backdrop-blur-sm border border-espresso/10 rounded-xl px-4 py-3 text-left hover:bg-cream/90 hover:border-espresso/20 transition-all group"
+              >
+                <span className={`flex-shrink-0 inline-flex items-center gap-1 text-xs font-mono font-medium px-2 py-0.5 rounded-full ${labelClass}`}>
+                  <Icon className="w-3 h-3" />
+                  {label}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-espresso leading-snug truncate group-hover:text-vintage-red transition-colors">
+                    {title}
+                  </p>
+                  <p className="text-xs text-warm-brown/60 mt-0.5">{detail}</p>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Scroll indicator */}
         <div
           ref={scrollIndicatorRef}
-          className="absolute bottom-[6vh] left-0 right-0 flex flex-col items-center gap-1 cursor-pointer"
+          className="flex flex-col items-center gap-1 mt-4 cursor-pointer"
           onClick={scrollDown}
           role="button"
           aria-label="Scroll down"
         >
-          <span className="font-mono text-xs uppercase tracking-widest text-warm-brown/60">
-            Scroll to explore
-          </span>
-          <ChevronDown className="w-5 h-5 text-warm-brown/50 animate-bounce" />
+          <ChevronDown className="w-5 h-5 text-warm-brown/40 animate-bounce" />
         </div>
       </div>
     </section>
