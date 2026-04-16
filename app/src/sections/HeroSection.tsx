@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { Mail, ChevronDown, Calendar, BookOpen, Leaf } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { scrollTo } from '@/lib/scroll';
 
 const previewItems = [
   {
@@ -42,24 +43,8 @@ export function HeroSection() {
   const sealRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
-  const tornOverlayRef = useRef<HTMLDivElement>(null);
-
-  const scrollToContact = () => {
-    const el = document.getElementById('contact');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const scrollDown = () => {
-    const el = document.getElementById('at-a-glance');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
 
   const prefersReducedMotion = useReducedMotion();
-
-  const scrollToSection = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) (el as HTMLElement).scrollIntoView({ behavior: 'smooth' });
-  };
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -69,7 +54,6 @@ export function HeroSection() {
     const ctx = gsap.context(() => {
       const loadTl = gsap.timeline({ defaults: { ease: 'power2.out' } });
 
-      // Dateline fades in from top
       loadTl.fromTo(
         datelineRef.current,
         { y: -8, opacity: 0 },
@@ -77,7 +61,6 @@ export function HeroSection() {
         0
       );
 
-      // Headline word-by-word reveal
       const words = headlineRef.current?.querySelectorAll('.word');
       if (words) {
         loadTl.fromTo(
@@ -88,7 +71,6 @@ export function HeroSection() {
         );
       }
 
-      // Subheadline
       loadTl.fromTo(
         subheadRef.current,
         { y: 14, opacity: 0 },
@@ -96,7 +78,6 @@ export function HeroSection() {
         0.55
       );
 
-      // CTA button
       loadTl.fromTo(
         ctaRef.current,
         { y: 16, opacity: 0 },
@@ -104,7 +85,6 @@ export function HeroSection() {
         0.75
       );
 
-      // Starburst seal
       loadTl.fromTo(
         sealRef.current,
         { rotate: -12, scale: 0.85, opacity: 0 },
@@ -112,7 +92,6 @@ export function HeroSection() {
         0.8
       );
 
-      // Preview cards stagger up from below
       const cards = previewRef.current?.querySelectorAll('.preview-card');
       if (cards) {
         loadTl.fromTo(
@@ -123,7 +102,6 @@ export function HeroSection() {
         );
       }
 
-      // Scroll indicator
       loadTl.fromTo(
         scrollIndicatorRef.current,
         { y: 8, opacity: 0 },
@@ -131,43 +109,6 @@ export function HeroSection() {
         1.1
       );
 
-      // Torn paper reveal — overlay rises from below to cover the hero
-      const allRefs = [
-        headlineRef.current,
-        subheadRef.current,
-        datelineRef.current,
-        ctaRef.current,
-        sealRef.current,
-        previewRef.current,
-        scrollIndicatorRef.current,
-      ];
-
-      gsap.set(tornOverlayRef.current, { visibility: 'hidden' });
-
-      const scrollTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end: '+=80%',
-          pin: true,
-          scrub: 0.6,
-          pinSpacing: true,
-          onEnter: () => {
-            if (tornOverlayRef.current) tornOverlayRef.current.style.visibility = 'visible';
-          },
-          onLeaveBack: () => {
-            gsap.set(allRefs, { opacity: 1, x: 0, y: 0, scale: 1, rotate: 0 });
-            if (tornOverlayRef.current) tornOverlayRef.current.style.visibility = 'hidden';
-          },
-        },
-      });
-
-      scrollTl.fromTo(
-        tornOverlayRef.current,
-        { y: '0%' },
-        { y: '-100%', ease: 'none' },
-        0
-      );
     }, section);
 
     return () => ctx.revert();
@@ -222,7 +163,7 @@ export function HeroSection() {
         {/* CTA */}
         <div ref={ctaRef} className="mt-8">
           <button
-            onClick={scrollToContact}
+            onClick={() => scrollTo('#contact')}
             className="vintage-red-btn flex items-center gap-2 text-base"
           >
             <Mail className="w-4 h-4" />
@@ -265,7 +206,7 @@ export function HeroSection() {
             {previewItems.map(({ id, label, labelClass, Icon, title, detail, href }) => (
               <button
                 key={id}
-                onClick={() => scrollToSection(href)}
+                onClick={() => scrollTo(href)}
                 className="preview-card flex-1 flex items-center gap-3 bg-cream/70 backdrop-blur-sm border border-espresso/10 rounded-xl px-4 py-3 text-left hover:bg-cream/90 hover:border-espresso/20 transition-all group"
               >
                 <span className={`flex-shrink-0 inline-flex items-center gap-1 text-xs font-mono font-medium px-2 py-0.5 rounded-full ${labelClass}`}>
@@ -287,8 +228,8 @@ export function HeroSection() {
         <div
           ref={scrollIndicatorRef}
           className="flex flex-col items-center gap-1 mt-4 cursor-pointer"
-          onClick={scrollDown}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') scrollDown(); }}
+          onClick={() => scrollTo('#at-a-glance')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') scrollTo('#at-a-glance'); }}
           role="button"
           tabIndex={0}
           aria-label="Scroll down"
@@ -297,33 +238,6 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Torn paper overlay — rises from below on scroll to reveal next section */}
-      <div
-        ref={tornOverlayRef}
-        className="absolute left-0 w-full z-30 pointer-events-none"
-        style={{ top: '100%', height: '100%', visibility: 'hidden' }}
-        aria-hidden="true"
-      >
-        <svg
-          viewBox="0 0 1440 60"
-          preserveAspectRatio="none"
-          className="absolute w-full"
-          style={{
-            top: '-59px',
-            height: '60px',
-            filter: 'drop-shadow(0px -4px 8px rgba(43, 31, 22, 0.15))',
-          }}
-        >
-          <path
-            d="M0,28 L12,18 L22,32 L35,12 L48,30 L58,8 L72,24 L82,38 L95,20 L108,35 L118,14 L130,28 L145,6 L158,22 L170,38 L182,16 L196,30 L208,10 L220,26 L234,40 L248,18 L262,34 L272,12 L286,28 L298,5 L312,22 L325,38 L340,14 L355,30 L368,8 L382,24 L395,40 L408,16 L422,32 L435,10 L450,28 L462,42 L476,18 L490,34 L504,12 L518,26 L530,40 L545,20 L558,35 L572,8 L586,28 L598,14 L614,30 L628,5 L642,22 L654,38 L668,16 L682,32 L695,10 L710,26 L724,42 L738,18 L752,34 L766,12 L780,28 L792,5 L806,22 L820,38 L834,16 L848,30 L860,8 L875,24 L888,40 L902,18 L916,35 L930,12 L944,28 L958,6 L972,22 L985,38 L998,14 L1012,30 L1026,8 L1040,26 L1052,40 L1066,18 L1080,34 L1095,12 L1108,28 L1122,5 L1136,22 L1148,38 L1162,16 L1176,30 L1190,10 L1204,26 L1218,42 L1232,18 L1246,35 L1260,12 L1274,28 L1286,6 L1300,22 L1314,38 L1328,16 L1342,32 L1356,10 L1370,28 L1382,42 L1396,18 L1410,34 L1424,14 L1440,28 L1440,60 L0,60 Z"
-            fill="hsl(var(--paper-primary))"
-          />
-        </svg>
-        <div
-          className="absolute inset-0"
-          style={{ background: 'linear-gradient(180deg, hsl(var(--paper-primary)) 0%, hsl(var(--paper-secondary)) 100%)' }}
-        />
-      </div>
     </section>
   );
 }

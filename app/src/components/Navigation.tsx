@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Menu, Mail } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { scrollTo } from '@/lib/scroll';
 
 const navLinks = [
   { label: 'Events', href: '#events' },
@@ -53,12 +54,9 @@ export function Navigation() {
     return () => observerRef.current?.disconnect();
   }, []);
 
-  const scrollToSection = (href: string) => {
+  const handleNavClick = (href: string) => {
     setIsOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollTo(href);
   };
 
   return (
@@ -101,7 +99,7 @@ export function Navigation() {
                   href={link.href}
                   onClick={(e) => {
                     e.preventDefault();
-                    scrollToSection(link.href);
+                    handleNavClick(link.href);
                   }}
                   className={`text-sm transition-colors relative ${
                     isActive
@@ -120,7 +118,7 @@ export function Navigation() {
               href="#contact"
               onClick={(e) => {
                 e.preventDefault();
-                scrollToSection('#contact');
+                handleNavClick('#contact');
               }}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-vintage-red text-cream text-sm font-medium hover:bg-vintage-red/90 transition-colors"
             >
@@ -153,7 +151,7 @@ export function Navigation() {
                         href={link.href}
                         onClick={(e) => {
                           e.preventDefault();
-                          scrollToSection(link.href);
+                          handleNavClick(link.href);
                         }}
                         className={`block px-4 py-3 rounded-xl transition-colors ${
                           isActive
@@ -171,7 +169,7 @@ export function Navigation() {
                   href="#contact"
                   onClick={(e) => {
                     e.preventDefault();
-                    scrollToSection('#contact');
+                    handleNavClick('#contact');
                   }}
                   className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-vintage-red text-cream font-medium hover:bg-vintage-red/90 transition-colors"
                 >
