@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Mail, PenTool, HandHeart, Store, Send, ArrowUp } from 'lucide-react';
+import { Mail, PenTool, Store, Send, ArrowUp } from 'lucide-react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { toast } from 'sonner';
 
@@ -125,14 +125,6 @@ export function ContactSection() {
 
         {/* Quick Action Links */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">
-          <a
-            href="#needs"
-            onClick={(e) => { e.preventDefault(); document.getElementById('needs')?.scrollIntoView({ behavior: 'smooth' }); }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cream text-espresso hover:bg-vintage-red hover:text-cream transition-colors"
-          >
-            <HandHeart className="w-4 h-4" />
-            Post a need
-          </a>
           <a
             href="#story"
             onClick={(e) => { e.preventDefault(); document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' }); }}

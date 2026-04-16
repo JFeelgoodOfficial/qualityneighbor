@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { Plus, HandHeart, PenTool, Store, X } from 'lucide-react';
+import { Plus, PenTool, Store, X } from 'lucide-react';
 
 interface ActionItem {
   label: string;
@@ -10,7 +10,6 @@ interface ActionItem {
 }
 
 const actions: ActionItem[] = [
-  { label: 'Post a Need', icon: HandHeart, href: '#needs', color: 'bg-amber-500' },
   { label: 'Submit a Story', icon: PenTool, href: '#story', color: 'bg-blue-500' },
   { label: 'Claim a Free Ad', icon: Store, href: '#business-ads', color: 'bg-emerald-500' },
 ];
