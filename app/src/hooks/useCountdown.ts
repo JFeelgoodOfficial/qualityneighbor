@@ -4,7 +4,6 @@ interface CountdownResult {
   days: number;
   hours: number;
   minutes: number;
-  seconds: number;
   isExpired: boolean;
 }
 
@@ -15,14 +14,13 @@ export function useCountdown(targetDate: Date): CountdownResult {
     const difference = target - now;
 
     if (difference <= 0) {
-      return { days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true };
+      return { days: 0, hours: 0, minutes: 0, isExpired: true };
     }
 
     return {
       days: Math.floor(difference / (1000 * 60 * 60 * 24)),
       hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
       minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-      seconds: Math.floor((difference % (1000 * 60)) / 1000),
       isExpired: false,
     };
   };
@@ -30,11 +28,23 @@ export function useCountdown(targetDate: Date): CountdownResult {
   const [timeLeft, setTimeLeft] = useState<CountdownResult>(calculateTimeLeft());
 
   useEffect(() => {
+    // Displaying d/h/m only — update every minute rather than every second
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
-    }, 1000);
+    }, 60000);
 
-    return () => clearInterval(timer);
+    // Sync immediately when the tab becomes visible again
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        setTimeLeft(calculateTimeLeft());
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, [targetDate]);
 
   return timeLeft;

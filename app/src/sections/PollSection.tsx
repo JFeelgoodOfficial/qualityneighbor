@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Check, BarChart3 } from 'lucide-react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 interface PollOption {
   id: string;
@@ -26,6 +24,7 @@ export function PollSection() {
   const [selectedOption, setSelectedOption] = useLocalStorage<string | null>('poll-selection', null);
   const [showResults, setShowResults] = useState(hasVoted);
 
+  const prefersReducedMotion = useReducedMotion();
   const totalVotes = pollData.reduce((sum, opt) => sum + opt.votes, 0);
 
   const handleVote = () => {
@@ -38,9 +37,9 @@ export function PollSection() {
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+    if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
-      // Card animation
       gsap.fromTo(
         cardRef.current,
         { y: 50, opacity: 0, scale: 0.98 },
@@ -81,11 +80,10 @@ export function PollSection() {
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
-  // Animate results bars when shown
   useEffect(() => {
-    if (showResults) {
+    if (showResults && !prefersReducedMotion) {
       const bars = cardRef.current?.querySelectorAll('.result-bar');
       if (bars) {
         gsap.fromTo(
@@ -95,7 +93,7 @@ export function PollSection() {
         );
       }
     }
-  }, [showResults]);
+  }, [showResults, prefersReducedMotion]);
 
   return (
     <section

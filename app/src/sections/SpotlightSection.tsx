@@ -1,17 +1,17 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Star, ArrowRight, Quote } from 'lucide-react';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export function SpotlightSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+    if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
       // Card animation
@@ -74,7 +74,7 @@ export function SpotlightSection() {
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <section
@@ -93,6 +93,7 @@ export function SpotlightSection() {
             <img
               src="/images/spotlight-portrait.jpg"
               alt="Darnell and Rosa T."
+              loading="lazy"
               className="portrait w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-espresso/50 via-transparent to-transparent md:bg-gradient-to-r" />
