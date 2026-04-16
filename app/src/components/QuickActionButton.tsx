@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { Plus, PenTool, Store, X } from 'lucide-react';
+import { scrollTo } from '@/lib/scroll';
 
 interface ActionItem {
   label: string;
@@ -69,10 +70,7 @@ export function QuickActionButton() {
 
   const handleActionClick = (href: string) => {
     setIsOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollTo(href);
   };
 
   return (

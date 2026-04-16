@@ -4,6 +4,7 @@ import { Mail, PenTool, Store, Send, ArrowUp } from 'lucide-react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { toast } from 'sonner';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { scrollTo } from '@/lib/scroll';
 
 export function ContactSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -127,7 +128,7 @@ export function ContactSection() {
         <div className="flex flex-wrap justify-center gap-3 mb-12">
           <a
             href="#story"
-            onClick={(e) => { e.preventDefault(); document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' }); }}
+            onClick={(e) => { e.preventDefault(); scrollTo('#story'); }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cream text-espresso hover:bg-vintage-red hover:text-cream transition-colors"
           >
             <PenTool className="w-4 h-4" />
@@ -135,7 +136,7 @@ export function ContactSection() {
           </a>
           <a
             href="#business-ads"
-            onClick={(e) => { e.preventDefault(); document.getElementById('business-ads')?.scrollIntoView({ behavior: 'smooth' }); }}
+            onClick={(e) => { e.preventDefault(); scrollTo('#business-ads'); }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cream text-espresso hover:bg-vintage-red hover:text-cream transition-colors"
           >
             <Store className="w-4 h-4" />

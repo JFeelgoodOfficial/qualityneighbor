@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { Mail, ChevronDown, Calendar, BookOpen, Leaf } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { scrollTo } from '@/lib/scroll';
 
 const previewItems = [
   {
@@ -43,22 +44,7 @@ export function HeroSection() {
   const previewRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
 
-  const scrollToContact = () => {
-    const el = document.getElementById('contact');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const scrollDown = () => {
-    const el = document.getElementById('at-a-glance');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
-
   const prefersReducedMotion = useReducedMotion();
-
-  const scrollToSection = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) (el as HTMLElement).scrollIntoView({ behavior: 'smooth' });
-  };
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -68,7 +54,6 @@ export function HeroSection() {
     const ctx = gsap.context(() => {
       const loadTl = gsap.timeline({ defaults: { ease: 'power2.out' } });
 
-      // Dateline fades in from top
       loadTl.fromTo(
         datelineRef.current,
         { y: -8, opacity: 0 },
@@ -76,7 +61,6 @@ export function HeroSection() {
         0
       );
 
-      // Headline word-by-word reveal
       const words = headlineRef.current?.querySelectorAll('.word');
       if (words) {
         loadTl.fromTo(
@@ -87,7 +71,6 @@ export function HeroSection() {
         );
       }
 
-      // Subheadline
       loadTl.fromTo(
         subheadRef.current,
         { y: 14, opacity: 0 },
@@ -95,7 +78,6 @@ export function HeroSection() {
         0.55
       );
 
-      // CTA button
       loadTl.fromTo(
         ctaRef.current,
         { y: 16, opacity: 0 },
@@ -103,7 +85,6 @@ export function HeroSection() {
         0.75
       );
 
-      // Starburst seal
       loadTl.fromTo(
         sealRef.current,
         { rotate: -12, scale: 0.85, opacity: 0 },
@@ -111,7 +92,6 @@ export function HeroSection() {
         0.8
       );
 
-      // Preview cards stagger up from below
       const cards = previewRef.current?.querySelectorAll('.preview-card');
       if (cards) {
         loadTl.fromTo(
@@ -122,7 +102,6 @@ export function HeroSection() {
         );
       }
 
-      // Scroll indicator
       loadTl.fromTo(
         scrollIndicatorRef.current,
         { y: 8, opacity: 0 },
@@ -184,7 +163,7 @@ export function HeroSection() {
         {/* CTA */}
         <div ref={ctaRef} className="mt-8">
           <button
-            onClick={scrollToContact}
+            onClick={() => scrollTo('#contact')}
             className="vintage-red-btn flex items-center gap-2 text-base"
           >
             <Mail className="w-4 h-4" />
@@ -227,7 +206,7 @@ export function HeroSection() {
             {previewItems.map(({ id, label, labelClass, Icon, title, detail, href }) => (
               <button
                 key={id}
-                onClick={() => scrollToSection(href)}
+                onClick={() => scrollTo(href)}
                 className="preview-card flex-1 flex items-center gap-3 bg-cream/70 backdrop-blur-sm border border-espresso/10 rounded-xl px-4 py-3 text-left hover:bg-cream/90 hover:border-espresso/20 transition-all group"
               >
                 <span className={`flex-shrink-0 inline-flex items-center gap-1 text-xs font-mono font-medium px-2 py-0.5 rounded-full ${labelClass}`}>
@@ -249,8 +228,8 @@ export function HeroSection() {
         <div
           ref={scrollIndicatorRef}
           className="flex flex-col items-center gap-1 mt-4 cursor-pointer"
-          onClick={scrollDown}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') scrollDown(); }}
+          onClick={() => scrollTo('#at-a-glance')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') scrollTo('#at-a-glance'); }}
           role="button"
           tabIndex={0}
           aria-label="Scroll down"
