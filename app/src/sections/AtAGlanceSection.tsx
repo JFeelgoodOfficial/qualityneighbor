@@ -1,13 +1,14 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { ArrowRight, Calendar, Leaf, Store, Star } from 'lucide-react';
+import { ArrowRight, Calendar, Leaf, Store, Star, Users } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 const quickLinks = [
   { label: 'Upcoming Events', icon: Calendar, href: '#events' },
   { label: 'Garden Tip', icon: Leaf, href: '#garden-tip' },
-  { label: 'Local Ads', icon: Store, href: '#business-ads' },
+  { label: 'Support Local', icon: Store, href: '#business-ads' },
   { label: 'Neighbor Spotlight', icon: Star, href: '#spotlight' },
+  { label: 'Community', icon: Users, href: '#community-connections' },
 ];
 
 export function AtAGlanceSection() {
