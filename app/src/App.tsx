@@ -34,6 +34,9 @@ const ShoutoutsSection = lazy(() =>
 const ResourcesSection = lazy(() =>
   import('@/sections/ResourcesSection').then(m => ({ default: m.ResourcesSection }))
 );
+const CommunityConnectionsSection = lazy(() =>
+  import('@/sections/CommunityConnectionsSection').then(m => ({ default: m.CommunityConnectionsSection }))
+);
 const ContactSection = lazy(() =>
   import('@/sections/ContactSection').then(m => ({ default: m.ContactSection }))
 );
@@ -73,6 +76,9 @@ function App() {
         </Suspense>
         <Suspense fallback={<SectionFallback />}>
           <ShoutoutsSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <CommunityConnectionsSection />
         </Suspense>
         <Suspense fallback={<SectionFallback />}>
           <ResourcesSection />

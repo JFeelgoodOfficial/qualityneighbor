@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { Mail, ChevronDown, Calendar, BookOpen, Leaf } from 'lucide-react';
+import { Mail, ChevronDown, Calendar, BookOpen, Leaf, Store, Users } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { scrollTo } from '@/lib/scroll';
 
@@ -31,6 +31,24 @@ const previewItems = [
     title: 'Keep Your Garden Happy in August Heat',
     detail: '4 easy tips',
     href: '#garden-tip',
+  },
+  {
+    id: 'business-ads',
+    label: 'Support Local',
+    labelClass: 'bg-amber-100 text-amber-800',
+    Icon: Store,
+    title: 'Shop & hire your neighbors first',
+    detail: 'Local businesses',
+    href: '#business-ads',
+  },
+  {
+    id: 'community',
+    label: 'Community',
+    labelClass: 'bg-sky-100 text-sky-800',
+    Icon: Users,
+    title: 'Schools, churches & civic orgs',
+    detail: 'Upcoming events',
+    href: '#community-connections',
   },
 ];
 

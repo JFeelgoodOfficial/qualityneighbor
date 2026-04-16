@@ -7,11 +7,12 @@ const navLinks = [
   { label: 'Events', href: '#events' },
   { label: 'Story', href: '#story' },
   { label: 'Tips', href: '#garden-tip' },
-  { label: 'Ads', href: '#business-ads' },
+  { label: 'Support Local', href: '#business-ads' },
+  { label: 'Community', href: '#community-connections' },
   { label: 'Contact', href: '#contact' },
 ];
 
-const sectionIds = ['events', 'story', 'garden-tip', 'business-ads', 'contact'];
+const sectionIds = ['events', 'story', 'garden-tip', 'business-ads', 'community-connections', 'contact'];
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
