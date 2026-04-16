@@ -30,16 +30,12 @@ const quickLinks = [
 
 const faqItems = [
   {
-    question: 'How do I post a need?',
-    answer: 'Click the "Post a need" button in the Neighborly Needs section. Fill out the simple form with what you need help with, and it will appear on the board for neighbors to see.',
-  },
-  {
     question: 'How do I claim a free ad?',
     answer: 'Local business ads are free for Hartland Ranch residents. Click the "Claim a free ad" button in the Local Business Ads section and submit your business details.',
   },
   {
     question: 'Can I remain anonymous?',
-    answer: 'Yes! When posting a need or shoutout, you can choose to display your first name only, a nickname, or post anonymously.',
+    answer: 'Yes! When posting a shoutout, you can choose to display your first name only, a nickname, or post anonymously.',
   },
   {
     question: 'How do I subscribe to the newsletter?',

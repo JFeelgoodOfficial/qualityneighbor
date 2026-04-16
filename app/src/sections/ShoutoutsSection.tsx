@@ -95,7 +95,7 @@ export function ShoutoutsSection() {
       {/* Header */}
       <div ref={headerRef} className="section-header mb-10">
         <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-espresso pb-4">
-          Fulfilled Needs & Shoutouts
+          Shoutouts
         </h2>
         <div className="w-44 h-0.5 bg-espresso/20" />
         <p className="mt-3 text-warm-brown">
