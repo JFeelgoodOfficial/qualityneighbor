@@ -6,7 +6,6 @@ import { QuickActionButton } from '@/components/QuickActionButton';
 import { Toaster } from '@/components/ui/sonner';
 import { HeroSection } from '@/sections/HeroSection';
 import { AtAGlanceSection } from '@/sections/AtAGlanceSection';
-import { NeedsSection } from '@/sections/NeedsSection';
 import { EventsSection } from '@/sections/EventsSection';
 import { PollSection } from '@/sections/PollSection';
 import { StorySection } from '@/sections/StorySection';
@@ -78,7 +77,6 @@ function App() {
       <main className="relative">
         <HeroSection />
         <AtAGlanceSection />
-        <NeedsSection />
         <EventsSection />
         <PollSection />
         <StorySection />

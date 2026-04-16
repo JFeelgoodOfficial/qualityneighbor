@@ -3,7 +3,6 @@ import { Menu, Mail } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 const navLinks = [
-  { label: 'Needs', href: '#needs' },
   { label: 'Events', href: '#events' },
   { label: 'Story', href: '#story' },
   { label: 'Tips', href: '#garden-tip' },
@@ -11,7 +10,7 @@ const navLinks = [
   { label: 'Contact', href: '#contact' },
 ];
 
-const sectionIds = ['needs', 'events', 'story', 'garden-tip', 'business-ads', 'contact'];
+const sectionIds = ['events', 'story', 'garden-tip', 'business-ads', 'contact'];
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
