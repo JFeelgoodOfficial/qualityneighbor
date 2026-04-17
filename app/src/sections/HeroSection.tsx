@@ -4,6 +4,17 @@ import { Mail, ChevronDown, Calendar, BookOpen, Leaf, Store, Users } from 'lucid
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { scrollTo } from '@/lib/scroll';
 
+const now = new Date();
+const ISSUE_MONTH_NAMES = [
+  'January','February','March','April','May','June',
+  'July','August','September','October','November','December',
+];
+const currentMonthName = ISSUE_MONTH_NAMES[now.getMonth()];
+const currentYear = now.getFullYear();
+// Issues started January 2026 = issue 1
+const issueNumber = (currentYear - 2026) * 12 + (now.getMonth() + 1);
+const issueDateline = `Issue ${String(issueNumber).padStart(2, '0')} · ${currentMonthName} ${currentYear} · Hartland Ranch, TX`;
+
 const previewItems = [
   {
     id: 'events',
@@ -154,7 +165,7 @@ export function HeroSection() {
         className="relative z-10 pt-[6vh] flex justify-center"
       >
         <span className="font-mono text-xs uppercase tracking-widest text-warm-brown/70">
-          Issue 04 · April 2026 · Hartland Ranch, TX
+          {issueDateline}
         </span>
       </div>
 

@@ -1,18 +1,22 @@
 import { useState, useEffect, useRef } from 'react';
-import { Menu, Mail } from 'lucide-react';
+import { Menu, Mail, Sun, Moon } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { scrollTo } from '@/lib/scroll';
+import { useDarkMode } from '@/hooks/useDarkMode';
 
 const navLinks = [
   { label: 'Events', href: '#events' },
+  { label: 'Weather', href: '#weather' },
   { label: 'Story', href: '#story' },
   { label: 'Tips', href: '#garden-tip' },
   { label: 'Support Local', href: '#business-ads' },
   { label: 'Community', href: '#community-connections' },
+  { label: 'Markets', href: '#farmers-market' },
+  { label: 'Health', href: '#health-directory' },
   { label: 'Contact', href: '#contact' },
 ];
 
-const sectionIds = ['events', 'story', 'garden-tip', 'business-ads', 'community-connections', 'contact'];
+const sectionIds = ['events', 'weather', 'story', 'garden-tip', 'business-ads', 'community-connections', 'farmers-market', 'health-directory', 'contact'];
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,6 +24,7 @@ export function Navigation() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeSection, setActiveSection] = useState<string>('');
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const { isDark, toggle: toggleDark } = useDarkMode();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -115,6 +120,13 @@ export function Navigation() {
                 </a>
               );
             })}
+            <button
+              onClick={toggleDark}
+              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+              className="p-2 rounded-full text-warm-brown hover:text-espresso hover:bg-paper-secondary transition-colors"
+            >
+              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
             <a
               href="#contact"
               onClick={(e) => {
@@ -166,6 +178,13 @@ export function Navigation() {
                   })}
                 </nav>
 
+                <button
+                  onClick={toggleDark}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-espresso hover:bg-paper-secondary transition-colors w-full"
+                >
+                  {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                  <span className="font-medium">{isDark ? 'Light Mode' : 'Dark Mode'}</span>
+                </button>
                 <a
                   href="#contact"
                   onClick={(e) => {

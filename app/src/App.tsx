@@ -37,6 +37,15 @@ const ResourcesSection = lazy(() =>
 const CommunityConnectionsSection = lazy(() =>
   import('@/sections/CommunityConnectionsSection').then(m => ({ default: m.CommunityConnectionsSection }))
 );
+const WeatherSection = lazy(() =>
+  import('@/sections/WeatherSection').then(m => ({ default: m.WeatherSection }))
+);
+const FarmersMarketSection = lazy(() =>
+  import('@/sections/FarmersMarketSection').then(m => ({ default: m.FarmersMarketSection }))
+);
+const HealthDirectorySection = lazy(() =>
+  import('@/sections/HealthDirectorySection').then(m => ({ default: m.HealthDirectorySection }))
+);
 const ContactSection = lazy(() =>
   import('@/sections/ContactSection').then(m => ({ default: m.ContactSection }))
 );
@@ -55,6 +64,9 @@ function App() {
         <HeroSection />
         <Suspense fallback={<SectionFallback />}>
           <AtAGlanceSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <WeatherSection />
         </Suspense>
         <Suspense fallback={<SectionFallback />}>
           <EventsSection />
@@ -79,6 +91,12 @@ function App() {
         </Suspense>
         <Suspense fallback={<SectionFallback />}>
           <CommunityConnectionsSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <FarmersMarketSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <HealthDirectorySection />
         </Suspense>
         <Suspense fallback={<SectionFallback />}>
           <ResourcesSection />
