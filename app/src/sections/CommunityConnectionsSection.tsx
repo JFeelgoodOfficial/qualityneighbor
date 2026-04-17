@@ -256,7 +256,15 @@ export function CommunityConnectionsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  useEffect(() => {
+    const el = bodyRef.current;
+    if (!el) return;
+    el.style.height = isExpanded ? el.scrollHeight + 'px' : '0px';
+  }, [isExpanded]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -311,12 +319,39 @@ export function CommunityConnectionsSection() {
       className="relative w-full py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 xl:px-12"
       style={{ background: 'hsl(var(--paper-primary))' }}
     >
-      <div ref={headerRef} className="section-header mb-6">
-        <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-espresso pb-4">
-          Community Connections
-        </h2>
-        <div className="w-44 h-0.5 bg-espresso/20" />
-      </div>
+      {/* Header — always visible, acts as toggle */}
+      <button
+        onClick={() => setIsExpanded(p => !p)}
+        className="w-full text-left group mb-2"
+        aria-expanded={isExpanded}
+        aria-controls="community-body"
+      >
+        <div ref={headerRef} className="section-header mb-0 flex items-end gap-4">
+          <div className="flex-1">
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-espresso pb-4 group-hover:text-vintage-red transition-colors">
+              Community Connections
+            </h2>
+            <div className="w-44 h-0.5 bg-espresso/20" />
+          </div>
+          <div className={`flex-shrink-0 mb-5 w-8 h-8 rounded-full bg-paper-secondary flex items-center justify-center text-warm-brown group-hover:text-vintage-red transition-all ${isExpanded ? 'rotate-180' : ''}`}>
+            <ChevronDown className="w-5 h-5" />
+          </div>
+        </div>
+        <p className="text-sm text-warm-brown/70 mt-2 mb-4">
+          {isExpanded
+            ? 'Schools, churches & civic orgs — click to collapse'
+            : `${orgs.length} organizations — schools, churches & civic orgs — click to view`}
+        </p>
+      </button>
+
+      {/* Collapsible body */}
+      <div
+        id="community-body"
+        ref={bodyRef}
+        className="overflow-hidden transition-[height] duration-500 ease-in-out"
+        style={{ height: 0 }}
+        aria-hidden={!isExpanded}
+      >
 
       <div ref={introRef} className="max-w-2xl mb-12">
         <p className="text-warm-brown leading-relaxed text-base sm:text-lg">
@@ -364,6 +399,7 @@ export function CommunityConnectionsSection() {
           );
         })}
       </div>
+      </div>{/* /collapsible body */}
     </section>
   );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { Stethoscope, Eye, Smile, MapPin, Phone, ChevronDown, CheckCircle, Clock } from 'lucide-react';
+import { Stethoscope, Eye, Smile, MapPin, Phone, ChevronDown, CheckCircle, Clock, ChevronUp } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 type Category = 'All' | 'Medical' | 'Dental' | 'Vision';
@@ -158,6 +158,14 @@ export function HealthDirectorySection() {
   const gridRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const [activeCategory, setActiveCategory] = useState<Category>('All');
+  const [isExpanded, setIsExpanded] = useState(false);
+  const bodyRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = bodyRef.current;
+    if (!el) return;
+    el.style.height = isExpanded ? el.scrollHeight + 'px' : '0px';
+  }, [isExpanded, activeCategory]);
 
   const filtered = activeCategory === 'All'
     ? PROVIDERS
@@ -201,21 +209,46 @@ export function HealthDirectorySection() {
       style={{ background: 'hsl(var(--paper-secondary))' }}
     >
       <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <div className="section-header pb-6 mb-8">
-          <div className="flex items-center gap-2 mb-2">
-            <Stethoscope className="w-4 h-4 text-vintage-red" />
-            <span className="font-mono text-xs uppercase tracking-wider text-warm-brown">
-              Health &amp; Wellness
-            </span>
+        {/* Header + toggle */}
+        <button
+          onClick={() => setIsExpanded(prev => !prev)}
+          className="w-full text-left group"
+          aria-expanded={isExpanded}
+          aria-controls="health-directory-body"
+        >
+          <div className="section-header pb-6 mb-0 flex items-start justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Stethoscope className="w-4 h-4 text-vintage-red" />
+                <span className="font-mono text-xs uppercase tracking-wider text-warm-brown">
+                  Health &amp; Wellness
+                </span>
+              </div>
+              <h2 className="font-display text-2xl sm:text-3xl font-semibold text-espresso group-hover:text-vintage-red transition-colors">
+                Local Medical Directory
+              </h2>
+              <p className="text-warm-brown mt-1 max-w-xl">
+                Healthcare providers serving Lockhart and Hartland Ranch.{' '}
+                <span className="text-vintage-red font-medium">
+                  {isExpanded ? 'Click to collapse' : `${PROVIDERS.length} providers — click to view`}
+                </span>
+              </p>
+            </div>
+            <div className="flex-shrink-0 mt-1 w-9 h-9 rounded-full bg-paper-primary flex items-center justify-center text-warm-brown group-hover:text-vintage-red group-hover:bg-paper-secondary transition-all">
+              {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            </div>
           </div>
-          <h2 className="font-display text-2xl sm:text-3xl font-semibold text-espresso">
-            Local Medical Directory
-          </h2>
-          <p className="text-warm-brown mt-1 max-w-xl">
-            Healthcare providers serving Lockhart and Hartland Ranch. Call ahead to confirm hours and insurance.
-          </p>
-        </div>
+        </button>
+
+        {/* Collapsible body */}
+        <div
+          id="health-directory-body"
+          ref={bodyRef}
+          className="overflow-hidden transition-[height] duration-500 ease-in-out"
+          style={{ height: 0 }}
+          aria-hidden={!isExpanded}
+        >
+        <div className="pt-8">
 
         {/* Category filter */}
         <div className="flex flex-wrap items-center gap-2 mb-6">
@@ -319,6 +352,8 @@ export function HealthDirectorySection() {
         <p className="text-xs text-warm-brown/40 mt-6">
           Call ahead to verify current hours, insurance, and availability. To add or update a listing, contact the newsletter team.
         </p>
+        </div>{/* /pt-8 */}
+        </div>{/* /collapsible body */}
       </div>
     </section>
   );

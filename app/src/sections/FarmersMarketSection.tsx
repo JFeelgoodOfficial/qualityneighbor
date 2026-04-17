@@ -1,6 +1,6 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { gsap } from 'gsap';
-import { ShoppingBasket, MapPin, Clock, CalendarDays } from 'lucide-react';
+import { ShoppingBasket, MapPin, Clock, CalendarDays, ChevronDown } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 interface Market {
@@ -75,12 +75,20 @@ function formatDate(d: Date): string {
 export function FarmersMarketSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const marketsWithDates = useMemo(() =>
     MARKETS.map(m => ({ ...m, upcoming: getUpcomingDates(m) })),
     []
   );
+
+  useEffect(() => {
+    const el = bodyRef.current;
+    if (!el) return;
+    el.style.height = isExpanded ? el.scrollHeight + 'px' : '0px';
+  }, [isExpanded]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -111,23 +119,45 @@ export function FarmersMarketSection() {
       style={{ background: 'hsl(var(--paper-primary))' }}
     >
       <div className="max-w-4xl mx-auto">
-        {/* Section header */}
-        <div className="section-header pb-6 mb-8">
-          <div className="flex items-center gap-2 mb-2">
-            <ShoppingBasket className="w-4 h-4 text-vintage-red" />
-            <span className="font-mono text-xs uppercase tracking-wider text-warm-brown">
-              Shop Fresh &amp; Local
-            </span>
+        {/* Section header — toggle */}
+        <button
+          onClick={() => setIsExpanded(p => !p)}
+          className="w-full text-left group"
+          aria-expanded={isExpanded}
+          aria-controls="farmers-market-body"
+        >
+          <div className="section-header pb-6 mb-0 flex items-start justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <ShoppingBasket className="w-4 h-4 text-vintage-red" />
+                <span className="font-mono text-xs uppercase tracking-wider text-warm-brown">
+                  Shop Fresh &amp; Local
+                </span>
+              </div>
+              <h2 className="font-display text-2xl sm:text-3xl font-semibold text-espresso group-hover:text-vintage-red transition-colors">
+                Farmers Markets Near Hartland Ranch
+              </h2>
+              <p className="text-warm-brown mt-1 max-w-xl">
+                {isExpanded
+                  ? 'Upcoming dates auto-update daily. Click to collapse.'
+                  : `${MARKETS.length} nearby markets — click to view upcoming dates`}
+              </p>
+            </div>
+            <div className={`flex-shrink-0 mt-1 w-9 h-9 rounded-full bg-paper-secondary flex items-center justify-center text-warm-brown group-hover:text-vintage-red transition-all ${isExpanded ? 'rotate-180' : ''}`}>
+              <ChevronDown className="w-5 h-5" />
+            </div>
           </div>
-          <h2 className="font-display text-2xl sm:text-3xl font-semibold text-espresso">
-            Farmers Markets Near Hartland Ranch
-          </h2>
-          <p className="text-warm-brown mt-2 max-w-xl">
-            Upcoming market dates auto-update each day. Support your neighbors and
-            local growers.
-          </p>
-        </div>
+        </button>
 
+        {/* Collapsible body */}
+        <div
+          id="farmers-market-body"
+          ref={bodyRef}
+          className="overflow-hidden transition-[height] duration-500 ease-in-out"
+          style={{ height: 0 }}
+          aria-hidden={!isExpanded}
+        >
+        <div className="pt-6">
         <div ref={contentRef} className="space-y-4">
           {marketsWithDates.map((market) => (
             <div key={market.name} className="market-card paper-card rounded-2xl p-5 sm:p-6">
@@ -188,6 +218,8 @@ export function FarmersMarketSection() {
             </div>
           ))}
         </div>
+        </div>{/* /pt-6 */}
+        </div>{/* /collapsible body */}
       </div>
     </section>
   );
