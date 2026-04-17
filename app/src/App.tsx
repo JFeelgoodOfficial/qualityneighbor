@@ -7,9 +7,6 @@ import './App.css';
 
 
 // Below-fold sections are lazy-loaded to reduce initial JS parse time
-const AtAGlanceSection = lazy(() =>
-  import('@/sections/AtAGlanceSection').then(m => ({ default: m.AtAGlanceSection }))
-);
 const EventsSection = lazy(() =>
   import('@/sections/EventsSection').then(m => ({ default: m.EventsSection }))
 );
@@ -65,9 +62,6 @@ function App() {
 
       <main className="relative">
         <HeroSection />
-        <Suspense fallback={<SectionFallback />}>
-          <AtAGlanceSection />
-        </Suspense>
         <Suspense fallback={<SectionFallback />}>
           <WeatherSection />
         </Suspense>
