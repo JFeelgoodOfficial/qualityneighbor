@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { Calendar, Clock, MapPin, ArrowRight, CalendarPlus } from 'lucide-react';
+import { Calendar, Clock, MapPin, ArrowRight, CalendarPlus, ChevronDown } from 'lucide-react';
 import { useCountdown } from '@/hooks/useCountdown';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
@@ -86,10 +86,18 @@ export function EventsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Next event: Block Party on Apr 19, 2026
   const nextEventDate = new Date('2026-04-19T17:00:00');
+
+  useEffect(() => {
+    const el = bodyRef.current;
+    if (!el) return;
+    el.style.height = isExpanded ? el.scrollHeight + 'px' : '0px';
+  }, [isExpanded]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -145,16 +153,41 @@ export function EventsSection() {
       className="relative w-full py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 xl:px-12"
       style={{ background: 'hsl(var(--paper-secondary))' }}
     >
-      {/* Header with countdown */}
-      <div ref={headerRef} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
-        <div className="section-header mb-0">
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-espresso pb-4">
-            Upcoming Events
-          </h2>
-          <div className="w-44 h-0.5 bg-espresso/20" />
+      {/* Header with countdown — always visible, acts as toggle */}
+      <button
+        onClick={() => setIsExpanded(p => !p)}
+        className="w-full text-left group"
+        aria-expanded={isExpanded}
+        aria-controls="events-body"
+      >
+        <div ref={headerRef} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-2">
+          <div className="section-header mb-0 flex items-end gap-4">
+            <div>
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-espresso pb-4 group-hover:text-vintage-red transition-colors">
+                Upcoming Events
+              </h2>
+              <div className="w-44 h-0.5 bg-espresso/20" />
+            </div>
+            <div className={`flex-shrink-0 mb-5 w-8 h-8 rounded-full bg-paper-primary flex items-center justify-center text-warm-brown group-hover:text-vintage-red transition-all ${isExpanded ? 'rotate-180' : ''}`}>
+              <ChevronDown className="w-5 h-5" />
+            </div>
+          </div>
+          <CountdownPill targetDate={nextEventDate} />
         </div>
-        <CountdownPill targetDate={nextEventDate} />
-      </div>
+        <p className="text-sm text-warm-brown/70 mb-2">
+          {isExpanded ? 'Click to collapse' : `${eventsData.length} events this month — click to view`}
+        </p>
+      </button>
+
+      {/* Collapsible body */}
+      <div
+        id="events-body"
+        ref={bodyRef}
+        className="overflow-hidden transition-[height] duration-500 ease-in-out"
+        style={{ height: 0 }}
+        aria-hidden={!isExpanded}
+      >
+      <div className="pt-6">
 
       {/* Events Grid */}
       <div ref={cardsRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -229,6 +262,8 @@ export function EventsSection() {
           <ArrowRight className="w-4 h-4" />
         </a>
       </div>
+      </div>{/* /pt-6 */}
+      </div>{/* /collapsible body */}
     </section>
   );
 }
