@@ -38,23 +38,32 @@
   }
 
   .dark {
+    /* Custom palette — dark equivalents */
+    --paper-primary: 24 20% 8%;
+    --paper-secondary: 24 20% 12%;
+    --vintage-red: 356 74% 58%;
+    --espresso: 42 20% 88%;
+    --warm-brown: 28 12% 62%;
+    --cream: 24 20% 11%;
+
+    /* shadcn overrides */
     --background: 24 20% 8%;
-    --foreground: 42 33% 93%;
+    --foreground: 42 20% 88%;
     --card: 24 20% 12%;
-    --card-foreground: 42 33% 93%;
+    --card-foreground: 42 20% 88%;
     --popover: 24 20% 12%;
-    --popover-foreground: 42 33% 93%;
-    --primary: 356 74% 50%;
+    --popover-foreground: 42 20% 88%;
+    --primary: 356 74% 58%;
     --primary-foreground: 42 50% 97%;
     --secondary: 24 20% 18%;
-    --secondary-foreground: 42 33% 93%;
+    --secondary-foreground: 42 20% 88%;
     --muted: 24 20% 18%;
-    --muted-foreground: 28 15% 55%;
-    --accent: 356 74% 50%;
+    --muted-foreground: 28 12% 62%;
+    --accent: 356 74% 58%;
     --accent-foreground: 42 50% 97%;
     --border: 24 20% 22%;
     --input: 24 20% 22%;
-    --ring: 356 74% 50%;
+    --ring: 356 74% 58%;
   }
 }
 
@@ -206,6 +215,18 @@ img {
 
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--warm-brown) / 0.5);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: hsl(24 20% 6%);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: hsl(28 12% 30%);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: hsl(28 12% 42%);
 }
 
 /* Selection styling */

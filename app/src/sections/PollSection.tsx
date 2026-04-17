@@ -10,22 +10,110 @@ interface PollOption {
   votes: number;
 }
 
-const pollData: PollOption[] = [
-  { id: '1', label: 'Saturday morning', votes: 24 },
-  { id: '2', label: 'Saturday evening', votes: 18 },
-  { id: '3', label: 'Sunday afternoon', votes: 31 },
-  { id: '4', label: 'Weeknight (6–8pm)', votes: 12 },
+interface MonthlyPoll {
+  question: string;
+  options: PollOption[];
+}
+
+// Apr=0 through Dec=8
+const MONTHLY_POLLS: MonthlyPoll[] = [
+  {
+    question: 'What spring event would you most like to see this year?',
+    options: [
+      { id: '1', label: 'Neighborhood yard sale trail', votes: 34 },
+      { id: '2', label: 'Block party cookout', votes: 28 },
+      { id: '3', label: 'Community garden workday', votes: 19 },
+      { id: '4', label: 'Kids\' outdoor movie night', votes: 22 },
+    ],
+  },
+  {
+    question: 'How do you prefer to get neighborhood updates?',
+    options: [
+      { id: '1', label: 'This newsletter', votes: 47 },
+      { id: '2', label: 'Facebook / Nextdoor', votes: 31 },
+      { id: '3', label: 'Text message alerts', votes: 18 },
+      { id: '4', label: 'Posted flyers', votes: 9 },
+    ],
+  },
+  {
+    question: 'What\'s your biggest summer priority at home?',
+    options: [
+      { id: '1', label: 'Keeping the lawn alive', votes: 29 },
+      { id: '2', label: 'Conserving water', votes: 24 },
+      { id: '3', label: 'Pool & outdoor fun', votes: 38 },
+      { id: '4', label: 'Staying cool indoors', votes: 16 },
+    ],
+  },
+  {
+    question: 'Best time for a neighborhood meetup?',
+    options: [
+      { id: '1', label: 'Saturday morning', votes: 24 },
+      { id: '2', label: 'Saturday evening', votes: 18 },
+      { id: '3', label: 'Sunday afternoon', votes: 31 },
+      { id: '4', label: 'Weeknight (6–8pm)', votes: 12 },
+    ],
+  },
+  {
+    question: 'What would most improve our neighborhood?',
+    options: [
+      { id: '1', label: 'More sidewalks / walking paths', votes: 41 },
+      { id: '2', label: 'Better street lighting', votes: 27 },
+      { id: '3', label: 'Community park improvements', votes: 33 },
+      { id: '4', label: 'Speed limit enforcement', votes: 22 },
+    ],
+  },
+  {
+    question: 'What fall activity are you most excited about?',
+    options: [
+      { id: '1', label: 'Neighborhood Halloween walk', votes: 38 },
+      { id: '2', label: 'Fall yard sales', votes: 22 },
+      { id: '3', label: 'Back-to-school block party', votes: 17 },
+      { id: '4', label: 'Outdoor movie night', votes: 29 },
+    ],
+  },
+  {
+    question: 'How do you celebrate Halloween in Hartland Ranch?',
+    options: [
+      { id: '1', label: 'Full trick-or-treat setup', votes: 44 },
+      { id: '2', label: 'Porch light off, quiet night', votes: 11 },
+      { id: '3', label: 'Neighborhood party instead', votes: 19 },
+      { id: '4', label: 'Take kids elsewhere', votes: 14 },
+    ],
+  },
+  {
+    question: 'Where do you shop for Thanksgiving groceries?',
+    options: [
+      { id: '1', label: 'H-E-B in Lockhart', votes: 52 },
+      { id: '2', label: 'Farmers market first, then H-E-B', votes: 18 },
+      { id: '3', label: 'Drive to Austin or San Marcos', votes: 12 },
+      { id: '4', label: 'Mix of online + local', votes: 9 },
+    ],
+  },
+  {
+    question: 'What holiday tradition matters most to you?',
+    options: [
+      { id: '1', label: 'Neighborhood holiday lights', votes: 39 },
+      { id: '2', label: 'Cookie/food exchange', votes: 26 },
+      { id: '3', label: 'Community donation drive', votes: 31 },
+      { id: '4', label: 'New Year\'s gathering', votes: 14 },
+    ],
+  },
 ];
+
+const _now = new Date();
+const _pollMonthKey = `${_now.getFullYear()}-${String(_now.getMonth() + 1).padStart(2, '0')}`;
+const _pollIndex = Math.min(Math.max(_now.getMonth() - 3, 0), 8);
+const { question: pollQuestion, options: pollOptions } = MONTHLY_POLLS[_pollIndex];
 
 export function PollSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const [hasVoted, setHasVoted] = useLocalStorage<boolean>('poll-voted', false);
-  const [selectedOption, setSelectedOption] = useLocalStorage<string | null>('poll-selection', null);
+  const [hasVoted, setHasVoted] = useLocalStorage<boolean>(`poll-voted-${_pollMonthKey}`, false);
+  const [selectedOption, setSelectedOption] = useLocalStorage<string | null>(`poll-selection-${_pollMonthKey}`, null);
   const [showResults, setShowResults] = useState(hasVoted);
 
   const prefersReducedMotion = useReducedMotion();
-  const totalVotes = pollData.reduce((sum, opt) => sum + opt.votes, 0);
+  const totalVotes = pollOptions.reduce((sum, opt) => sum + opt.votes, 0);
 
   const handleVote = () => {
     if (selectedOption) {
@@ -119,13 +207,13 @@ export function PollSection() {
           </div>
 
           <h3 className="font-display text-xl sm:text-2xl font-semibold text-espresso mb-6">
-            What's the best time for a neighborhood meetup?
+            {pollQuestion}
           </h3>
 
           {!showResults ? (
             /* Voting Options */
             <div className="space-y-3">
-              {pollData.map((option) => (
+              {pollOptions.map((option) => (
                 <button
                   key={option.id}
                   onClick={() => setSelectedOption(option.id)}
@@ -168,7 +256,7 @@ export function PollSection() {
           ) : (
             /* Results */
             <div className="space-y-4">
-              {pollData.map((option) => {
+              {pollOptions.map((option) => {
                 const percentage = Math.round((option.votes / totalVotes) * 100);
                 const isSelected = selectedOption === option.id;
 
