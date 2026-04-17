@@ -65,7 +65,7 @@ export function AtAGlanceSection() {
         <div className="w-44 h-0.5 bg-espresso/20" />
       </div>
 
-      <div ref={gridRef} className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div ref={gridRef} className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
         {quickLinks.map((link) => {
           const Icon = link.icon;
           return (
@@ -73,10 +73,10 @@ export function AtAGlanceSection() {
               key={link.label}
               href={link.href}
               onClick={(e) => { e.preventDefault(); scrollTo(link.href); }}
-              className={`glance-btn aspect-square rounded-2xl flex flex-col items-center justify-center gap-3 p-4 transition-all duration-200 active:scale-95 ${link.color}`}
+              className={`glance-btn h-20 sm:h-24 rounded-xl flex flex-col items-center justify-center gap-1.5 px-2 transition-all duration-200 active:scale-95 ${link.color}`}
             >
-              <Icon className="w-7 h-7 sm:w-8 sm:h-8" />
-              <span className="font-medium text-sm sm:text-base text-center leading-tight">
+              <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="font-medium text-xs sm:text-sm text-center leading-tight">
                 {link.label}
               </span>
             </a>
