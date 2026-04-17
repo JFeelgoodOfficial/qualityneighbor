@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { Mail, ChevronDown, Calendar, BookOpen, Leaf, Store, Users } from 'lucide-react';
+import { Mail, ChevronDown, Calendar, BookOpen, Leaf, Store, Users, ShoppingBag, FileText, Gamepad2 } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { scrollTo } from '@/lib/scroll';
 
@@ -15,52 +15,15 @@ const currentYear = now.getFullYear();
 const issueNumber = (currentYear - 2026) * 12 + (now.getMonth() + 1);
 const issueDateline = `Issue ${String(issueNumber).padStart(2, '0')} · ${currentMonthName} ${currentYear} · Hartland Ranch, TX`;
 
-const previewItems = [
-  {
-    id: 'events',
-    label: 'Events',
-    labelClass: 'bg-vintage-red/10 text-vintage-red',
-    Icon: Calendar,
-    title: 'Block Party on Bluebonnet',
-    detail: 'Sat, Apr 19 · 5–8pm',
-    href: '#events',
-  },
-  {
-    id: 'story',
-    label: 'Story',
-    labelClass: 'bg-warm-brown/10 text-warm-brown',
-    Icon: BookOpen,
-    title: 'The Little Free Library That Keeps Giving',
-    detail: 'By Marisol V.',
-    href: '#story',
-  },
-  {
-    id: 'garden-tip',
-    label: 'Tips',
-    labelClass: 'bg-emerald-100 text-emerald-800',
-    Icon: Leaf,
-    title: 'Keep Your Garden Happy in August Heat',
-    detail: '4 easy tips',
-    href: '#garden-tip',
-  },
-  {
-    id: 'business-ads',
-    label: 'Support Local',
-    labelClass: 'bg-amber-100 text-amber-800',
-    Icon: Store,
-    title: 'Shop & hire your neighbors first',
-    detail: 'Local businesses',
-    href: '#business-ads',
-  },
-  {
-    id: 'community',
-    label: 'Community',
-    labelClass: 'bg-sky-100 text-sky-800',
-    Icon: Users,
-    title: 'Schools, churches & civic orgs',
-    detail: 'Upcoming events',
-    href: '#community-connections',
-  },
+const heroLinks = [
+  { label: 'Events',        icon: Calendar,    href: '#events',                color: 'bg-red-50/80    text-red-700' },
+  { label: 'Story',         icon: BookOpen,    href: '#story',                 color: 'bg-stone-100/80 text-stone-600' },
+  { label: 'Tips',          icon: Leaf,        href: '#garden-tip',            color: 'bg-green-50/80  text-green-700' },
+  { label: 'Support Local', icon: Store,       href: '#business-ads',          color: 'bg-amber-50/80  text-amber-700' },
+  { label: 'Community',     icon: Users,       href: '#community-connections', color: 'bg-blue-50/80   text-blue-700' },
+  { label: 'Markets',       icon: ShoppingBag, href: '#farmers-market',        color: 'bg-orange-50/80 text-orange-700' },
+  { label: 'Resources',     icon: FileText,    href: '#resources',             color: 'bg-slate-100/80 text-slate-600' },
+  { label: 'Play',          icon: Gamepad2,    href: '#bunny-warren',          color: 'bg-violet-50/80 text-violet-700' },
 ];
 
 export function HeroSection() {
@@ -121,7 +84,7 @@ export function HeroSection() {
         0.8
       );
 
-      const cards = previewRef.current?.querySelectorAll('.preview-card');
+      const cards = previewRef.current?.querySelectorAll('.preview-card, .glance-btn');
       if (cards) {
         loadTl.fromTo(
           cards,
@@ -226,28 +189,20 @@ export function HeroSection() {
 
       {/* Bottom: "In this issue" preview + scroll indicator */}
       <div className="relative z-10 pb-[3.5vh] px-4 sm:px-6 lg:px-8">
-        {/* Preview cards */}
+        {/* Preview grid */}
         <div ref={previewRef}>
           <p className="font-mono text-xs uppercase tracking-widest text-warm-brown/50 text-center mb-3">
             In this issue
           </p>
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 max-w-3xl mx-auto">
-            {previewItems.map(({ id, label, labelClass, Icon, title, detail, href }) => (
+          <div className="grid grid-cols-4 gap-2 max-w-xl mx-auto">
+            {heroLinks.map(({ label, icon: Icon, href, color }) => (
               <button
-                key={id}
+                key={label}
                 onClick={() => scrollTo(href)}
-                className="preview-card flex-1 flex items-center gap-3 bg-cream/70 backdrop-blur-sm border border-espresso/10 rounded-xl px-4 py-3 text-left hover:bg-cream/90 hover:border-espresso/20 transition-all group"
+                className={`preview-card h-16 rounded-xl flex flex-col items-center justify-center gap-1 px-1 transition-all duration-200 active:scale-95 backdrop-blur-sm ${color}`}
               >
-                <span className={`flex-shrink-0 inline-flex items-center gap-1 text-xs font-mono font-medium px-2 py-0.5 rounded-full ${labelClass}`}>
-                  <Icon className="w-3 h-3" />
-                  {label}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-espresso leading-snug truncate group-hover:text-vintage-red transition-colors">
-                    {title}
-                  </p>
-                  <p className="text-xs text-warm-brown/60 mt-0.5">{detail}</p>
-                </div>
+                <Icon className="w-4 h-4" />
+                <span className="font-medium text-xs text-center leading-tight">{label}</span>
               </button>
             ))}
           </div>
