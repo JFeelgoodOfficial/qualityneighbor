@@ -4,8 +4,6 @@ import {
   FileText,
   Trash2,
   Droplets,
-  Shield,
-  Search,
   PenTool,
   ExternalLink,
 } from 'lucide-react';
@@ -21,8 +19,6 @@ const quickLinks = [
   { label: 'HOA Contact & Documents', icon: FileText, href: '#' },
   { label: 'Trash & Recycling Schedule', icon: Trash2, href: '#' },
   { label: 'City of Lockhart Utilities', icon: Droplets, href: '#' },
-  { label: 'Neighborhood Safety Tips', icon: Shield, href: '#' },
-  { label: 'Lost & Found Board', icon: Search, href: '#' },
   { label: 'Submit a Story', icon: PenTool, href: '#' },
 ];
 
