@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { Gamepad2, ChevronDown, ExternalLink } from 'lucide-react';
 
-const GAME_URL = 'https://playcentralgames.com';
+const GAME_URL = 'https://playcentralgames.com/game.html';
 
 export function BunnyWarrenSection() {
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -71,15 +71,15 @@ export function BunnyWarrenSection() {
           aria-hidden={!isExpanded}
         >
           <div className="pt-6 flex flex-col items-center gap-3">
-            <div className="w-full overflow-x-auto flex justify-center">
+            <div className="w-full flex justify-center">
               <iframe
                 src={srcLoaded ? GAME_URL : undefined}
-                width="420"
-                height="580"
+                width="100%"
+                height="640"
                 frameBorder="0"
                 allow="autoplay"
                 title="Bunny Warren game"
-                className="rounded-xl shadow-card border border-espresso/10 max-w-full"
+                style={{ borderRadius: '16px', maxWidth: '860px' }}
               />
             </div>
             <a
