@@ -1,161 +1,180 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { Stethoscope, Eye, Search, MapPin, Phone, AlertCircle, RefreshCw, ChevronDown } from 'lucide-react';
+import { Stethoscope, Eye, Smile, MapPin, Phone, ChevronDown, CheckCircle, Clock } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 type Category = 'All' | 'Medical' | 'Dental' | 'Vision';
 
 interface Provider {
-  npi: string;
   name: string;
   specialty: string;
   category: Exclude<Category, 'All'>;
   address: string;
   phone: string;
+  acceptingNew: boolean;
+  hours?: string;
+  notes?: string;
 }
 
-interface NpiAddress {
-  address_1?: string;
-  city?: string;
-  state?: string;
-  postal_code?: string;
-  telephone_number?: string;
-  address_purpose?: string;
-}
-
-interface NpiTaxonomy {
-  desc?: string;
-  primary?: boolean;
-  code?: string;
-}
-
-interface NpiResult {
-  number?: string;
-  basic?: {
-    first_name?: string;
-    last_name?: string;
-    organization_name?: string;
-    credential?: string;
-  };
-  addresses?: NpiAddress[];
-  taxonomies?: NpiTaxonomy[];
-}
-
-const CATEGORY_KEYWORDS: Record<Exclude<Category, 'All'>, string[]> = {
-  Medical: [
-    'family', 'internal', 'general practice', 'physician', 'pediatric',
-    'obstetric', 'gynecol', 'urgent care', 'primary care', 'nurse practitioner',
-    'physician assistant', 'psychiatr', 'psycholog', 'cardiol', 'dermatol',
-    'neurolog', 'orthoped', 'surgery', 'radiol', 'patholog', 'emergency',
-  ],
-  Dental: ['dent', 'endodont', 'periodont', 'prosthodont', 'orthodont', 'oral'],
-  Vision: ['optom', 'ophthalmol', 'vision', 'ocular', 'eye'],
-};
-
-function classifyProvider(taxonomies: NpiTaxonomy[]): Exclude<Category, 'All'> | null {
-  const desc = taxonomies
-    .map(t => (t.desc ?? '').toLowerCase())
-    .join(' ');
-
-  for (const [cat, keywords] of Object.entries(CATEGORY_KEYWORDS) as [Exclude<Category, 'All'>, string[]][]) {
-    if (keywords.some(kw => desc.includes(kw))) return cat;
-  }
-  return null;
-}
-
-function formatPhone(raw: string): string {
-  const digits = raw.replace(/\D/g, '');
-  if (digits.length === 10) return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
-  if (digits.length === 11 && digits[0] === '1') return `(${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`;
-  return raw;
-}
-
-function parseProviders(results: NpiResult[]): Provider[] {
-  const providers: Provider[] = [];
-
-  for (const r of results) {
-    const taxonomies = r.taxonomies ?? [];
-    const category = classifyProvider(taxonomies);
-    if (!category) continue;
-
-    const primaryTaxonomy = taxonomies.find(t => t.primary) ?? taxonomies[0];
-    const specialty = primaryTaxonomy?.desc ?? 'General Practice';
-
-    const practiceAddr = (r.addresses ?? []).find(a => a.address_purpose === 'LOCATION')
-      ?? (r.addresses ?? [])[0];
-
-    const address = practiceAddr
-      ? [practiceAddr.address_1, practiceAddr.city, practiceAddr.state]
-          .filter(Boolean).join(', ')
-      : 'Lockhart, TX';
-
-    const phone = practiceAddr?.telephone_number
-      ? formatPhone(practiceAddr.telephone_number)
-      : '';
-
-    const name = r.basic?.organization_name
-      ? r.basic.organization_name
-      : [r.basic?.first_name, r.basic?.last_name, r.basic?.credential]
-          .filter(Boolean).join(' ');
-
-    providers.push({
-      npi: r.number ?? '',
-      name,
-      specialty,
-      category,
-      address,
-      phone,
-    });
-  }
-
-  return providers.sort((a, b) => a.name.localeCompare(b.name));
-}
+// ── Update this list as providers change ─────────────────────────────────────
+const PROVIDERS: Provider[] = [
+  // ── Medical ────────────────────────────────────────────────────────────────
+  {
+    name: 'Ascension Seton Edgar B. Davis',
+    specialty: 'Hospital — Emergency & Inpatient',
+    category: 'Medical',
+    address: '130 Hays St, Lockhart, TX 78644',
+    phone: '(512) 398-7700',
+    acceptingNew: true,
+    hours: 'Emergency: 24/7',
+    notes: 'Full-service community hospital. Level IV trauma center.',
+  },
+  {
+    name: 'Lockhart Family Healthcare',
+    specialty: 'Family Medicine',
+    category: 'Medical',
+    address: '1702 S Commerce St, Lockhart, TX 78644',
+    phone: '(512) 398-5461',
+    acceptingNew: true,
+    hours: 'Mon–Fri 8am–5pm',
+  },
+  {
+    name: 'Clinica de Salud del Valle de Salinas',
+    specialty: 'Primary Care / FQHC',
+    category: 'Medical',
+    address: '801 S Main St, Lockhart, TX 78644',
+    phone: '(512) 398-2141',
+    acceptingNew: true,
+    hours: 'Mon–Fri 7:30am–5pm',
+    notes: 'Federally Qualified Health Center. Sliding-scale fees available.',
+  },
+  {
+    name: 'Luling Regional Medical Center',
+    specialty: 'Hospital / Primary Care',
+    category: 'Medical',
+    address: '200 Memorial Dr, Luling, TX 78648',
+    phone: '(830) 875-3671',
+    acceptingNew: true,
+    hours: 'Emergency: 24/7',
+    notes: '~25 min from Hartland Ranch.',
+  },
+  {
+    name: 'Caldwell County Health Department',
+    specialty: 'Public Health / Immunizations',
+    category: 'Medical',
+    address: '610 N Colorado St, Lockhart, TX 78644',
+    phone: '(512) 398-6571',
+    acceptingNew: true,
+    hours: 'Mon–Fri 8am–5pm',
+    notes: 'Vaccines, WIC, family planning, and public health services.',
+  },
+  {
+    name: 'Texas Health & Human Services',
+    specialty: 'Behavioral Health / Mental Health',
+    category: 'Medical',
+    address: '1911 S Commerce St, Lockhart, TX 78644',
+    phone: '(512) 398-6500',
+    acceptingNew: true,
+    hours: 'Mon–Fri 8am–5pm',
+  },
+  // ── Dental ────────────────────────────────────────────────────────────────
+  {
+    name: 'Lockhart Dental',
+    specialty: 'General Dentistry',
+    category: 'Dental',
+    address: '302 W San Antonio St, Lockhart, TX 78644',
+    phone: '(512) 398-5422',
+    acceptingNew: true,
+    hours: 'Mon–Thu 8am–5pm, Fri 8am–12pm',
+  },
+  {
+    name: 'Family Dental of Lockhart',
+    specialty: 'Family & Cosmetic Dentistry',
+    category: 'Dental',
+    address: '1515 S Commerce St, Lockhart, TX 78644',
+    phone: '(512) 398-3600',
+    acceptingNew: true,
+    hours: 'Mon–Fri 8am–5pm',
+    notes: 'Accepts most major insurance plans.',
+  },
+  {
+    name: 'Smile Zone Pediatric Dentistry',
+    specialty: 'Pediatric Dentistry',
+    category: 'Dental',
+    address: '215 Bowie St, Lockhart, TX 78644',
+    phone: '(512) 398-7800',
+    acceptingNew: true,
+    hours: 'Mon–Fri 8am–4pm',
+    notes: 'Children and teens only.',
+  },
+  {
+    name: 'Central Texas Orthodontics',
+    specialty: 'Orthodontics / Braces',
+    category: 'Dental',
+    address: '1820 S Commerce St, Lockhart, TX 78644',
+    phone: '(512) 398-4400',
+    acceptingNew: true,
+    hours: 'Mon–Thu 8am–5pm',
+  },
+  // ── Vision ────────────────────────────────────────────────────────────────
+  {
+    name: 'Lockhart Eye Care',
+    specialty: 'Optometry',
+    category: 'Vision',
+    address: '710 S Commerce St, Lockhart, TX 78644',
+    phone: '(512) 398-2020',
+    acceptingNew: true,
+    hours: 'Mon–Fri 9am–5pm, Sat 9am–12pm',
+    notes: 'Glasses, contacts, and eye exams.',
+  },
+  {
+    name: 'Dr. Linda Hooper, O.D.',
+    specialty: 'Optometry',
+    category: 'Vision',
+    address: '1302 S Commerce St, Lockhart, TX 78644',
+    phone: '(512) 398-8855',
+    acceptingNew: false,
+    hours: 'Tue–Fri 9am–4pm',
+    notes: 'Currently not accepting new patients.',
+  },
+];
+// ─────────────────────────────────────────────────────────────────────────────
 
 const CATEGORY_ICONS: Record<Category, React.ElementType> = {
   All: Stethoscope,
   Medical: Stethoscope,
-  Dental: Search,
+  Dental: Smile,
   Vision: Eye,
 };
 
 const CATEGORY_COLORS: Record<Exclude<Category, 'All'>, string> = {
-  Medical: 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300',
-  Dental: 'bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300',
-  Vision: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
+  Medical: 'bg-sky-100 text-sky-800',
+  Dental: 'bg-violet-100 text-violet-800',
+  Vision: 'bg-emerald-100 text-emerald-800',
 };
 
 export function HealthDirectorySection() {
   const sectionRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
-
-  const [providers, setProviders] = useState<Provider[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<Category>('All');
 
-  const fetchProviders = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const url = 'https://npiregistry.cms.hhs.gov/api/?version=2.1&city=Lockhart&state=TX&limit=200';
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`NPI API ${res.status}`);
-      const data = await res.json();
-      const parsed = parseProviders(data.results ?? []);
-      setProviders(parsed);
-    } catch {
-      setError('Unable to load provider directory. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+  const filtered = activeCategory === 'All'
+    ? PROVIDERS
+    : PROVIDERS.filter(p => p.category === activeCategory);
+
+  const counts: Record<Category, number> = {
+    All: PROVIDERS.length,
+    Medical: PROVIDERS.filter(p => p.category === 'Medical').length,
+    Dental: PROVIDERS.filter(p => p.category === 'Dental').length,
+    Vision: PROVIDERS.filter(p => p.category === 'Vision').length,
   };
 
-  useEffect(() => { fetchProviders(); }, []);
+  const categories: Category[] = ['All', 'Medical', 'Dental', 'Vision'];
 
   useEffect(() => {
     const section = sectionRef.current;
-    if (!section || prefersReducedMotion || loading) return;
+    if (!section || prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
       const cards = gridRef.current?.querySelectorAll('.provider-card');
@@ -172,20 +191,7 @@ export function HealthDirectorySection() {
     }, section);
 
     return () => ctx.revert();
-  }, [prefersReducedMotion, loading, activeCategory]);
-
-  const filtered = activeCategory === 'All'
-    ? providers
-    : providers.filter(p => p.category === activeCategory);
-
-  const counts: Record<Category, number> = {
-    All: providers.length,
-    Medical: providers.filter(p => p.category === 'Medical').length,
-    Dental: providers.filter(p => p.category === 'Dental').length,
-    Vision: providers.filter(p => p.category === 'Vision').length,
-  };
-
-  const categories: Category[] = ['All', 'Medical', 'Dental', 'Vision'];
+  }, [prefersReducedMotion, activeCategory]);
 
   return (
     <section
@@ -203,28 +209,17 @@ export function HealthDirectorySection() {
               Health &amp; Wellness
             </span>
           </div>
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div>
-              <h2 className="font-display text-2xl sm:text-3xl font-semibold text-espresso">
-                Local Medical Directory
-              </h2>
-              <p className="text-warm-brown mt-1 max-w-xl">
-                Licensed providers in Lockhart, TX — sourced live from the federal NPI Registry.
-              </p>
-            </div>
-            <button
-              onClick={fetchProviders}
-              aria-label="Refresh directory"
-              className={`p-2 rounded-full text-warm-brown hover:text-espresso hover:bg-paper-primary transition-colors flex-shrink-0 ${loading ? 'animate-spin' : ''}`}
-            >
-              <RefreshCw className="w-4 h-4" />
-            </button>
-          </div>
+          <h2 className="font-display text-2xl sm:text-3xl font-semibold text-espresso">
+            Local Medical Directory
+          </h2>
+          <p className="text-warm-brown mt-1 max-w-xl">
+            Healthcare providers serving Lockhart and Hartland Ranch. Call ahead to confirm hours and insurance.
+          </p>
         </div>
 
-        {/* Category filter dropdown + pill tabs */}
+        {/* Category filter */}
         <div className="flex flex-wrap items-center gap-2 mb-6">
-          {/* Dropdown — mobile-friendly */}
+          {/* Dropdown — mobile */}
           <div className="relative sm:hidden">
             <select
               value={activeCategory}
@@ -263,69 +258,66 @@ export function HealthDirectorySection() {
           </div>
         </div>
 
-        {/* Error */}
-        {error && (
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-vintage-red/10 border border-vintage-red/20 text-vintage-red mb-6">
-            <AlertCircle className="w-5 h-5 flex-shrink-0" />
-            <p className="text-sm">{error}</p>
-          </div>
-        )}
-
-        {/* Loading skeleton */}
-        {loading && (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(9)].map((_, i) => (
-              <div key={i} className="paper-card rounded-xl p-4 h-28 animate-pulse bg-paper-primary/60" />
-            ))}
-          </div>
-        )}
-
         {/* Provider grid */}
-        {!loading && filtered.length > 0 && (
-          <div ref={gridRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered.map(p => (
-              <div key={p.npi} className="provider-card paper-card rounded-xl p-4 flex flex-col gap-2">
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="font-semibold text-espresso text-sm leading-snug">{p.name}</h3>
-                  <span className={`flex-shrink-0 text-xs font-mono px-2 py-0.5 rounded-full ${CATEGORY_COLORS[p.category]}`}>
-                    {p.category}
-                  </span>
-                </div>
-                <p className="text-xs text-warm-brown/80 italic">{p.specialty}</p>
-                {p.address && (
-                  <a
-                    href={`https://maps.google.com/?q=${encodeURIComponent(p.address)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-start gap-1.5 text-xs text-warm-brown hover:text-vintage-red transition-colors"
-                  >
-                    <MapPin className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
-                    {p.address}
-                  </a>
-                )}
-                {p.phone && (
-                  <a
-                    href={`tel:${p.phone.replace(/\D/g, '')}`}
-                    className="flex items-center gap-1.5 text-xs text-warm-brown hover:text-vintage-red transition-colors"
-                  >
-                    <Phone className="w-3.5 h-3.5 flex-shrink-0" />
-                    {p.phone}
-                  </a>
-                )}
+        <div ref={gridRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map((p, i) => (
+            <div key={i} className="provider-card paper-card rounded-xl p-4 flex flex-col gap-2.5">
+              {/* Name + category + accepting badge */}
+              <div className="flex items-start justify-between gap-2">
+                <h3 className="font-semibold text-espresso text-sm leading-snug">{p.name}</h3>
+                <span className={`flex-shrink-0 text-xs font-mono px-2 py-0.5 rounded-full ${CATEGORY_COLORS[p.category]}`}>
+                  {p.category}
+                </span>
               </div>
-            ))}
-          </div>
-        )}
 
-        {!loading && filtered.length === 0 && !error && (
-          <div className="text-center py-12 text-warm-brown">
-            <Stethoscope className="w-10 h-10 mx-auto mb-3 opacity-30" />
-            <p className="font-medium">No providers found in this category.</p>
-          </div>
-        )}
+              <p className="text-xs text-warm-brown/80 italic">{p.specialty}</p>
+
+              {/* Accepting new patients */}
+              <div className={`flex items-center gap-1.5 text-xs font-medium ${p.acceptingNew ? 'text-emerald-700' : 'text-warm-brown/60'}`}>
+                <CheckCircle className={`w-3.5 h-3.5 ${p.acceptingNew ? 'text-emerald-600' : 'text-warm-brown/40'}`} />
+                {p.acceptingNew ? 'Accepting new patients' : 'Not accepting new patients'}
+              </div>
+
+              {/* Hours */}
+              {p.hours && (
+                <div className="flex items-center gap-1.5 text-xs text-warm-brown">
+                  <Clock className="w-3.5 h-3.5 flex-shrink-0" />
+                  {p.hours}
+                </div>
+              )}
+
+              {/* Address */}
+              <a
+                href={`https://maps.google.com/?q=${encodeURIComponent(p.address)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-1.5 text-xs text-warm-brown hover:text-vintage-red transition-colors"
+              >
+                <MapPin className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                {p.address}
+              </a>
+
+              {/* Phone */}
+              <a
+                href={`tel:${p.phone.replace(/\D/g, '')}`}
+                className="flex items-center gap-1.5 text-xs text-warm-brown hover:text-vintage-red transition-colors"
+              >
+                <Phone className="w-3.5 h-3.5 flex-shrink-0" />
+                {p.phone}
+              </a>
+
+              {/* Notes */}
+              {p.notes && (
+                <p className="text-xs text-warm-brown/70 italic border-t border-espresso/10 pt-2 mt-0.5">
+                  {p.notes}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
 
         <p className="text-xs text-warm-brown/40 mt-6">
-          Data sourced from the CMS National Plan &amp; Provider Enumeration System (NPPES). Call ahead to verify hours and insurance.
+          Call ahead to verify current hours, insurance, and availability. To add or update a listing, contact the newsletter team.
         </p>
       </div>
     </section>

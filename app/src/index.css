@@ -148,6 +148,35 @@
   }
 }
 
+/* Dark mode — gold section trim ─────────────────────────────────────────────
+   A thin luminous line at the top of every named section. Fades in from both
+   edges so it reads as a gleam rather than a hard border.               */
+.dark section[id]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(43 65% 50% / 0.2) 10%,
+    hsl(43 75% 60% / 0.55) 35%,
+    hsl(43 90% 70% / 0.8) 50%,
+    hsl(43 75% 60% / 0.55) 65%,
+    hsl(43 65% 50% / 0.2) 90%,
+    transparent 100%
+  );
+  box-shadow: 0 0 14px 2px hsl(43 80% 58% / 0.18);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.dark section[id] {
+  position: relative;
+}
+
 /* Smooth image rendering */
 img {
   -webkit-font-smoothing: antialiased;
