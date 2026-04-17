@@ -13,10 +13,11 @@ const navLinks = [
   { label: 'Community', href: '#community-connections' },
   { label: 'Markets', href: '#farmers-market' },
   { label: 'Health', href: '#health-directory' },
+  { label: 'Play', href: '#bunny-warren' },
   { label: 'Contact', href: '#contact' },
 ];
 
-const sectionIds = ['events', 'weather', 'story', 'garden-tip', 'business-ads', 'community-connections', 'farmers-market', 'health-directory', 'contact'];
+const sectionIds = ['events', 'weather', 'story', 'garden-tip', 'business-ads', 'community-connections', 'farmers-market', 'health-directory', 'bunny-warren', 'contact'];
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
