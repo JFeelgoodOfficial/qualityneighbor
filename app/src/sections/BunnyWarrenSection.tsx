@@ -21,7 +21,7 @@ const GAMES: Game[] = [
     id: 'slingshot-carnival',
     title: 'Slingshot Carnival',
     description: 'Step right up! A carnival slingshot game — click to play, no download needed.',
-    url: 'https://playcentralgames.vercel.app/slingshot-carnival.html',
+    url: 'https://playcentralgames.com/slingshot-carnival.html',
     height: 600,
   },
 ];
