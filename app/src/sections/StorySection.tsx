@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { ArrowRight, User, Calendar, ChevronUp } from 'lucide-react';
+import { ArrowRight, Calendar, ChevronUp } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export function StorySection() {
@@ -90,36 +90,27 @@ export function StorySection() {
           <span className="category-pill-red mb-4 inline-block">Featured Story</span>
 
           <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-espresso mb-4 leading-tight">
-            The Little Free Library That Keeps Giving
+            The Mysterious Runner
           </h2>
 
           <div className="flex flex-wrap gap-4 text-sm text-warm-brown mb-6">
             <span className="flex items-center gap-1.5">
-              <User className="w-4 h-4" />
-              By Marisol V.
-            </span>
-            <span className="flex items-center gap-1.5">
               <Calendar className="w-4 h-4" />
-              August 2026
+              May 2026
             </span>
           </div>
 
           <div className="space-y-4 text-warm-brown leading-relaxed mb-6">
             <p>
-              It started with one shelf and a handwritten note: "Take a book, leave a book."
-              Three years later, the little wooden library on the corner of Bluebonnet and
-              Meadowbrook has become something of a community landmark.
+              Every morning before the sun rises, a lone figure can be seen pounding the pavement,
+              breath misting in the early air. No one knows his name... he never stops to chat,
+              never posts his times online. But over the past few months, this anonymous runner
+              has become a quiet fixture in our community.
             </p>
             <p>
-              "I see neighbors there every morning," says Darnell Thompson, who lives across
-              the street. "Dog walkers, kids on their way to school, parents with strollers—
-              everyone stops to peek inside."
-            </p>
-            <p>
-              The library's curator, Marisol Vega, has kept the collection fresh with
-              everything from mystery novels to cookbooks to children's picture books.
-              She even added a small notebook where neighbors can leave recommendations
-              and reviews.
+              Observers have noticed the transformation. His stride has grown longer, more confident.
+              His pace, once steady, now has a sharpened edge. Rumor has it he's been training for
+              a personal goal, one that requires months of discipline, grit, and early alarms.
             </p>
           </div>
 
@@ -132,31 +123,14 @@ export function StorySection() {
           >
             <div className="space-y-4 text-warm-brown leading-relaxed mb-6">
               <p>
-                The notebook — a spiral-bound one with a red cover — has filled up twice already.
-                Marisol replaced it each time, keeping the old ones in a small binder she calls
-                "The Neighborhood Record." Flip through the pages and you'll find everything from
-                two-sentence reviews to heartfelt thank-you notes left by strangers.
+                There's something inspiring about his journey. He doesn't run for applause or
+                recognition. He runs to get better. To push limits. To beat yesterday's time.
+                In a world of likes and hashtags, his silent commitment is a refreshing reminder:
+                progress doesn't always need an audience.
               </p>
               <p>
-                "People write the sweetest things," she laughs. "Someone left a note saying the
-                library helped them through a really hard month. That made everything worth it."
-              </p>
-              <p>
-                Over the years the library has taken on a seasonal personality. Summer brings
-                beach reads and kids' chapter books. Fall fills the shelves with Texas history
-                and cozy mysteries. December brings holiday classics — and, mysteriously, a
-                small wrapped gift tucked inside each year by an anonymous donor.
-              </p>
-              <p>
-                The original single shelf has grown into a proper cedar cabinet, built and
-                donated by neighbor Carlos Reyes. A small solar-powered light keeps it visible
-                after dark. Marisol says she's never had to ask for donations — books simply
-                appear, and the collection stays full.
-              </p>
-              <p>
-                What started as a small gesture has become proof that big community spirit
-                doesn't require a big budget. If you'd like to donate books or help maintain
-                the library, reach out to Marisol through the Contact section below.
+                Whoever he is, we're rooting for him. And maybe, just maybe, his quiet pursuit
+                will nudge a few more of us to lace up and chase our own goals.
               </p>
             </div>
           </div>
@@ -186,24 +160,14 @@ export function StorySection() {
             {/* Main Image */}
             <div className="relative z-10 rounded-2xl overflow-hidden shadow-card">
               <img
-                src="/images/story-library-1.jpg"
-                alt="Little Free Library on the sidewalk"
+                src="/images/story-runner.jpg"
+                alt="A lone runner on a misty morning road"
                 loading="lazy"
-                className="w-full h-64 sm:h-80 object-cover"
+                className="w-full h-72 sm:h-96 object-cover object-top"
               />
             </div>
 
-            {/* Secondary Image (overlapping) */}
-            <div className="absolute -bottom-8 -left-4 sm:-left-8 w-2/3 z-20 rounded-2xl overflow-hidden shadow-card border-4 border-cream">
-              <img
-                src="/images/story-library-2.jpg"
-                alt="Books inside the library"
-                loading="lazy"
-                className="w-full h-40 sm:h-48 object-cover"
-              />
-            </div>
-
-            {/* Decorative element */}
+            {/* Decorative elements */}
             <div className="absolute -top-4 -right-4 w-24 h-24 bg-vintage-red/10 rounded-full -z-10" />
             <div className="absolute -bottom-4 right-1/4 w-16 h-16 bg-paper-secondary rounded-full -z-10" />
           </div>
