@@ -10,6 +10,7 @@ import {
   Wifi,
   ChevronDown,
   Recycle,
+  MapPin,
 } from 'lucide-react';
 import {
   Accordion,
@@ -227,6 +228,13 @@ export function ResourcesSection() {
                 <span className={labelClass}>Centric Fiber Internet Services</span>
                 <p className="text-xs text-warm-brown/60 mt-0.5 font-mono">877.342.7270</p>
               </div>
+            </a>
+
+            {/* Find Where To Vote */}
+            <a href="https://goelect.txelections.civixapps.com/ivis-mvp-ui/#/login" target="_blank" rel="noopener noreferrer" className={linkClass}>
+              <div className={iconBoxClass}><MapPin className="w-5 h-5" /></div>
+              <span className={labelClass}>Find Where To Vote</span>
+              <ExternalLink className={extIconClass} />
             </a>
 
             {/* Submit a Story */}
