@@ -1,13 +1,21 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { ArrowRight, User, Calendar } from 'lucide-react';
+import { ArrowRight, User, Calendar, ChevronUp } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export function StorySection() {
   const sectionRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLDivElement>(null);
+  const fullStoryRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  const [storyExpanded, setStoryExpanded] = useState(false);
+
+  useEffect(() => {
+    const el = fullStoryRef.current;
+    if (!el) return;
+    el.style.height = storyExpanded ? el.scrollHeight + 'px' : '0px';
+  }, [storyExpanded]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -76,7 +84,7 @@ export function StorySection() {
       className="relative w-full py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 xl:px-12"
       style={{ background: 'hsl(var(--paper-secondary))' }}
     >
-      <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center max-w-7xl mx-auto">
+      <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start max-w-7xl mx-auto">
         {/* Text Column */}
         <div ref={textRef} className="order-2 lg:order-1">
           <span className="category-pill-red mb-4 inline-block">Featured Story</span>
@@ -98,30 +106,78 @@ export function StorySection() {
 
           <div className="space-y-4 text-warm-brown leading-relaxed mb-6">
             <p>
-              It started with one shelf and a handwritten note: "Take a book, leave a book." 
-              Three years later, the little wooden library on the corner of Bluebonnet and 
+              It started with one shelf and a handwritten note: "Take a book, leave a book."
+              Three years later, the little wooden library on the corner of Bluebonnet and
               Meadowbrook has become something of a community landmark.
             </p>
             <p>
-              "I see neighbors there every morning," says Darnell Thompson, who lives across 
+              "I see neighbors there every morning," says Darnell Thompson, who lives across
               the street. "Dog walkers, kids on their way to school, parents with strollers—
               everyone stops to peek inside."
             </p>
             <p>
-              The library's curator, Marisol Vega, has kept the collection fresh with 
-              everything from mystery novels to cookbooks to children's picture books. 
-              She even added a small notebook where neighbors can leave recommendations 
+              The library's curator, Marisol Vega, has kept the collection fresh with
+              everything from mystery novels to cookbooks to children's picture books.
+              She even added a small notebook where neighbors can leave recommendations
               and reviews.
             </p>
           </div>
 
-          <a
-            href="#"
-            className="inline-flex items-center gap-2 text-vintage-red font-medium hover:gap-3 transition-all"
+          {/* Expandable full story */}
+          <div
+            ref={fullStoryRef}
+            className="overflow-hidden transition-[height] duration-500 ease-in-out"
+            style={{ height: 0 }}
+            aria-hidden={!storyExpanded}
           >
-            Read the full story
-            <ArrowRight className="w-4 h-4" />
-          </a>
+            <div className="space-y-4 text-warm-brown leading-relaxed mb-6">
+              <p>
+                The notebook — a spiral-bound one with a red cover — has filled up twice already.
+                Marisol replaced it each time, keeping the old ones in a small binder she calls
+                "The Neighborhood Record." Flip through the pages and you'll find everything from
+                two-sentence reviews to heartfelt thank-you notes left by strangers.
+              </p>
+              <p>
+                "People write the sweetest things," she laughs. "Someone left a note saying the
+                library helped them through a really hard month. That made everything worth it."
+              </p>
+              <p>
+                Over the years the library has taken on a seasonal personality. Summer brings
+                beach reads and kids' chapter books. Fall fills the shelves with Texas history
+                and cozy mysteries. December brings holiday classics — and, mysteriously, a
+                small wrapped gift tucked inside each year by an anonymous donor.
+              </p>
+              <p>
+                The original single shelf has grown into a proper cedar cabinet, built and
+                donated by neighbor Carlos Reyes. A small solar-powered light keeps it visible
+                after dark. Marisol says she's never had to ask for donations — books simply
+                appear, and the collection stays full.
+              </p>
+              <p>
+                What started as a small gesture has become proof that big community spirit
+                doesn't require a big budget. If you'd like to donate books or help maintain
+                the library, reach out to Marisol through the Contact section below.
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setStoryExpanded(e => !e)}
+            className="inline-flex items-center gap-2 text-vintage-red font-medium hover:gap-3 transition-all"
+            aria-expanded={storyExpanded}
+          >
+            {storyExpanded ? (
+              <>
+                Show less
+                <ChevronUp className="w-4 h-4" />
+              </>
+            ) : (
+              <>
+                Read the full story
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </button>
         </div>
 
         {/* Images Column */}
