@@ -192,7 +192,7 @@ export function ResourcesSection() {
           <nav className="space-y-2">
 
             {/* HOA */}
-            <a href="#" className={linkClass}>
+            <a href="https://www.aquitymanagementgroup.com/" target="_blank" rel="noopener noreferrer" className={linkClass}>
               <div className={iconBoxClass}><FileText className="w-5 h-5" /></div>
               <span className={labelClass}>HOA Contact & Documents</span>
               <ExternalLink className={extIconClass} />
