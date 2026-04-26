@@ -22,9 +22,6 @@ const GardenTipSection = lazy(() =>
 const BusinessAdsSection = lazy(() =>
   import('@/sections/BusinessAdsSection').then(m => ({ default: m.BusinessAdsSection }))
 );
-const SpotlightSection = lazy(() =>
-  import('@/sections/SpotlightSection').then(m => ({ default: m.SpotlightSection }))
-);
 const ShoutoutsSection = lazy(() =>
   import('@/sections/ShoutoutsSection').then(m => ({ default: m.ShoutoutsSection }))
 );
@@ -79,9 +76,6 @@ function App() {
         </Suspense>
         <Suspense fallback={<SectionFallback />}>
           <BusinessAdsSection />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
-          <SpotlightSection />
         </Suspense>
         <Suspense fallback={<SectionFallback />}>
           <ShoutoutsSection />
