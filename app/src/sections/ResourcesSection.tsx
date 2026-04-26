@@ -221,10 +221,12 @@ export function ResourcesSection() {
             </a>
 
             {/* Centric Fiber */}
-            <a href="https://centricfiber.com" target="_blank" rel="noopener noreferrer" className={linkClass}>
+            <a href="tel:8773427270" className={linkClass}>
               <div className={iconBoxClass}><Wifi className="w-5 h-5" /></div>
-              <span className={labelClass}>Centric Fiber Internet Services</span>
-              <ExternalLink className={extIconClass} />
+              <div className="flex-1 min-w-0">
+                <span className={labelClass}>Centric Fiber Internet Services</span>
+                <p className="text-xs text-warm-brown/60 mt-0.5 font-mono">877.342.7270</p>
+              </div>
             </a>
 
             {/* Submit a Story */}
