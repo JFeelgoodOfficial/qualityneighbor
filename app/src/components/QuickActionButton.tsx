@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { Plus, PenTool, Store, X } from 'lucide-react';
-import { scrollTo } from '@/lib/scroll';
 
 interface ActionItem {
   label: string;
@@ -10,9 +9,11 @@ interface ActionItem {
   color: string;
 }
 
+const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSecVtURiF63BKkLjS5fZnY6gkFbDIDWeP2cR74zeHQKfUbA0w/viewform?usp=header';
+
 const actions: ActionItem[] = [
-  { label: 'Submit a Story', icon: PenTool, href: '#story', color: 'bg-blue-500' },
-  { label: 'Claim a Free Ad', icon: Store, href: '#business-ads', color: 'bg-emerald-500' },
+  { label: 'Submit a Story', icon: PenTool, href: FORM_URL, color: 'bg-blue-500' },
+  { label: 'Claim a Free Ad', icon: Store, href: FORM_URL, color: 'bg-emerald-500' },
 ];
 
 export function QuickActionButton() {
@@ -70,7 +71,7 @@ export function QuickActionButton() {
 
   const handleActionClick = (href: string) => {
     setIsOpen(false);
-    scrollTo(href);
+    window.open(href, '_blank', 'noopener,noreferrer');
   };
 
   return (

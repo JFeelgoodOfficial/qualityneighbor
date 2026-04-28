@@ -159,9 +159,14 @@ export function BusinessAdsSection() {
               Claim a free ad spot in next month's newsletter.
             </p>
           </div>
-          <button className="vintage-red-btn whitespace-nowrap">
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSecVtURiF63BKkLjS5fZnY6gkFbDIDWeP2cR74zeHQKfUbA0w/viewform?usp=header"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="vintage-red-btn whitespace-nowrap"
+          >
             Claim a free ad
-          </button>
+          </a>
         </div>
       </div>
     </section>
