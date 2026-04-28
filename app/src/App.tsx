@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { Navigation } from '@/components/Navigation';
 import { QuickActionButton } from '@/components/QuickActionButton';
 import { Toaster } from '@/components/ui/sonner';
@@ -102,6 +103,7 @@ function App() {
 
       <QuickActionButton />
       <Toaster position="bottom-right" richColors />
+      <Analytics />
     </div>
   );
 }
