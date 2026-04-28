@@ -10,6 +10,7 @@ import {
   Wifi,
   ChevronDown,
   Recycle,
+  MapPin,
 } from 'lucide-react';
 import {
   Accordion,
@@ -206,7 +207,7 @@ export function ResourcesSection() {
           <nav className="space-y-2">
 
             {/* HOA */}
-            <a href="#" className={linkClass}>
+            <a href="https://www.aquitymanagementgroup.com/" target="_blank" rel="noopener noreferrer" className={linkClass}>
               <div className={iconBoxClass}><FileText className="w-5 h-5" /></div>
               <span className={labelClass}>HOA Contact & Documents</span>
               <ExternalLink className={extIconClass} />
@@ -235,9 +236,18 @@ export function ResourcesSection() {
             </a>
 
             {/* Centric Fiber */}
-            <a href="https://centricfiber.com" target="_blank" rel="noopener noreferrer" className={linkClass}>
+            <a href="tel:8773427270" className={linkClass}>
               <div className={iconBoxClass}><Wifi className="w-5 h-5" /></div>
-              <span className={labelClass}>Centric Fiber Internet Services</span>
+              <div className="flex-1 min-w-0">
+                <span className={labelClass}>Centric Fiber Internet Services</span>
+                <p className="text-xs text-warm-brown/60 mt-0.5 font-mono">877.342.7270</p>
+              </div>
+            </a>
+
+            {/* Find Where To Vote */}
+            <a href="https://goelect.txelections.civixapps.com/ivis-mvp-ui/#/login" target="_blank" rel="noopener noreferrer" className={linkClass}>
+              <div className={iconBoxClass}><MapPin className="w-5 h-5" /></div>
+              <span className={labelClass}>Find Where To Vote</span>
               <ExternalLink className={extIconClass} />
             </a>
 
