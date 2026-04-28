@@ -4,7 +4,6 @@ import { Mail, PenTool, Store, Send, ArrowUp } from 'lucide-react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { toast } from 'sonner';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { scrollTo } from '@/lib/scroll';
 
 export function ContactSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -127,16 +126,18 @@ export function ContactSection() {
         {/* Quick Action Links */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">
           <a
-            href="#story"
-            onClick={(e) => { e.preventDefault(); scrollTo('#story'); }}
+            href="https://docs.google.com/forms/d/e/1FAIpQLSecVtURiF63BKkLjS5fZnY6gkFbDIDWeP2cR74zeHQKfUbA0w/viewform?usp=header"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cream text-espresso hover:bg-vintage-red hover:text-cream transition-colors"
           >
             <PenTool className="w-4 h-4" />
             Submit a story
           </a>
           <a
-            href="#business-ads"
-            onClick={(e) => { e.preventDefault(); scrollTo('#business-ads'); }}
+            href="https://docs.google.com/forms/d/e/1FAIpQLSecVtURiF63BKkLjS5fZnY6gkFbDIDWeP2cR74zeHQKfUbA0w/viewform?usp=header"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cream text-espresso hover:bg-vintage-red hover:text-cream transition-colors"
           >
             <Store className="w-4 h-4" />

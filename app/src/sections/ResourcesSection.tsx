@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import {
   FileText,
@@ -80,14 +80,28 @@ function TrashRecyclingLink() {
   );
 }
 
-const faqItems = [
+const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSecVtURiF63BKkLjS5fZnY6gkFbDIDWeP2cR74zeHQKfUbA0w/viewform?usp=header';
+
+const faqItems: { question: string; answer: React.ReactNode }[] = [
   {
     question: 'How do I claim a free ad?',
     answer: 'Local business ads are free for Hartland Ranch residents. Click the "Claim a free ad" button in the Local Business Ads section and submit your business details.',
   },
   {
-    question: 'Can I remain anonymous?',
-    answer: 'Yes! When posting a shoutout, you can choose to display your first name only, a nickname, or post anonymously.',
+    question: 'How do I submit an article idea?',
+    answer: (
+      <>
+        We love hearing from the community!{' '}
+        <a
+          href={FORM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-vintage-red underline hover:no-underline"
+        >
+          Submit your article idea here.
+        </a>
+      </>
+    ),
   },
   {
     question: 'How do I subscribe to the newsletter?',
@@ -238,7 +252,7 @@ export function ResourcesSection() {
             </a>
 
             {/* Submit a Story */}
-            <a href="#" className={linkClass}>
+            <a href={FORM_URL} target="_blank" rel="noopener noreferrer" className={linkClass}>
               <div className={iconBoxClass}><PenTool className="w-5 h-5" /></div>
               <span className={labelClass}>Submit a Story</span>
               <ExternalLink className={extIconClass} />
