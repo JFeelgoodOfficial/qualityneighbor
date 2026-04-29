@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Navigation } from '@/components/Navigation';
 import { QuickActionButton } from '@/components/QuickActionButton';
+import { PremiumAdBanner } from '@/components/PremiumAdBanner';
 import { Toaster } from '@/components/ui/sonner';
 import { HeroSection } from '@/sections/HeroSection';
 import './App.css';
@@ -62,6 +63,11 @@ function App() {
         <Suspense fallback={<SectionFallback />}>
           <WeatherSection />
         </Suspense>
+        <PremiumAdBanner
+          sponsorName="HEB"
+          sponsorUrl="https://www.heb.com"
+          sponsorDisplay="HEB.com"
+        />
         <Suspense fallback={<SectionFallback />}>
           <EventsSection />
         </Suspense>
@@ -92,6 +98,11 @@ function App() {
         <Suspense fallback={<SectionFallback />}>
           <BunnyWarrenSection />
         </Suspense>
+        <PremiumAdBanner
+          sponsorName="Minicuration"
+          sponsorUrl="http://Minicuration.com"
+          sponsorDisplay="Minicuration.com"
+        />
         <Suspense fallback={<SectionFallback />}>
           <ResourcesSection />
         </Suspense>
