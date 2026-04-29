@@ -335,3 +335,19 @@ img {
 .bulb-off {
   color: hsl(var(--warm-brown) / 0.5);
 }
+
+/* Premium ad ticker */
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 28s linear infinite;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
