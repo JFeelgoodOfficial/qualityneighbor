@@ -324,3 +324,14 @@ img {
   background: hsl(var(--vintage-red) / 0.2);
   color: hsl(var(--espresso));
 }
+
+/* Lightbulb toggle — lit state (light mode) */
+.bulb-on {
+  color: #d97706;
+  filter: drop-shadow(0 0 6px #fbbf24cc) drop-shadow(0 0 2px #fde68a);
+}
+
+/* Lightbulb toggle — off state (dark mode) */
+.bulb-off {
+  color: hsl(var(--warm-brown) / 0.5);
+}
