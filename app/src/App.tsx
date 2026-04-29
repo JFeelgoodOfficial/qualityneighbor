@@ -67,6 +67,8 @@ function App() {
           sponsorName="HEB"
           sponsorUrl="https://www.heb.com"
           sponsorDisplay="HEB.com"
+          mediaSrc="/images/ad-heb.jpg"
+          mediaType="image"
         />
         <Suspense fallback={<SectionFallback />}>
           <EventsSection />
@@ -102,6 +104,8 @@ function App() {
           sponsorName="Minicuration"
           sponsorUrl="http://Minicuration.com"
           sponsorDisplay="Minicuration.com"
+          mediaSrc="/images/ad-minicuration.mp4"
+          mediaType="video"
         />
         <Suspense fallback={<SectionFallback />}>
           <ResourcesSection />

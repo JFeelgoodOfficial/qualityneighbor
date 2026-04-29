@@ -2,16 +2,23 @@ interface PremiumAdBannerProps {
   sponsorName: string;
   sponsorUrl: string;
   sponsorDisplay?: string;
+  mediaSrc?: string;
+  mediaType?: 'image' | 'video';
 }
 
-const SEPARATOR = '  ·  ';
+const SEPARATOR = '  ·  ';
 
-export function PremiumAdBanner({ sponsorName, sponsorUrl, sponsorDisplay }: PremiumAdBannerProps) {
+export function PremiumAdBanner({
+  sponsorName,
+  sponsorUrl,
+  sponsorDisplay,
+  mediaSrc,
+  mediaType = 'image',
+}: PremiumAdBannerProps) {
   const label = sponsorDisplay ?? sponsorName;
   const segment =
     `QualityNeighbor${SEPARATOR}Brought to you by ${label}${SEPARATOR}` +
     `Your neighborhood newsletter${SEPARATOR}Support local${SEPARATOR}`;
-  // Two identical copies so the second seamlessly replaces the first as it scrolls off
   const tickerContent = segment.repeat(6);
 
   return (
@@ -21,30 +28,53 @@ export function PremiumAdBanner({ sponsorName, sponsorUrl, sponsorDisplay }: Pre
     >
       <div className="flex items-stretch" style={{ minHeight: '9rem' }}>
 
-        {/* Placeholder image block */}
+        {/* Media block */}
         <div
-          className="w-36 sm:w-52 flex-shrink-0 flex flex-col items-center justify-center gap-2 border-r"
-          style={{ borderColor: 'hsl(var(--paper-primary) / 0.08)', background: 'hsl(var(--paper-primary) / 0.04)' }}
+          className="w-36 sm:w-52 flex-shrink-0 overflow-hidden border-r"
+          style={{ borderColor: 'hsl(var(--paper-primary) / 0.08)' }}
         >
-          {/* Grey image placeholder rectangle */}
-          <div
-            className="w-20 sm:w-28 h-12 sm:h-16 rounded-lg flex items-center justify-center"
-            style={{ background: 'hsl(var(--warm-brown) / 0.25)' }}
-            aria-label="Sponsor logo placeholder"
-          >
-            <span
-              className="font-mono text-xs uppercase tracking-widest"
-              style={{ color: 'hsl(var(--paper-primary) / 0.35)' }}
+          {mediaSrc && mediaType === 'image' && (
+            <img
+              src={mediaSrc}
+              alt={`${label} advertisement`}
+              className="w-full h-full object-cover"
+            />
+          )}
+          {mediaSrc && mediaType === 'video' && (
+            <video
+              src={mediaSrc}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+              aria-label={`${label} advertisement`}
+            />
+          )}
+          {!mediaSrc && (
+            <div
+              className="w-full h-full flex flex-col items-center justify-center gap-2"
+              style={{ background: 'hsl(var(--warm-brown) / 0.25)' }}
             >
-              logo
-            </span>
-          </div>
-          <span
-            className="font-mono text-[10px] uppercase tracking-widest"
-            style={{ color: 'hsl(var(--paper-primary) / 0.30)' }}
-          >
-            Sponsored
-          </span>
+              <div
+                className="w-20 sm:w-28 h-12 sm:h-16 rounded-lg flex items-center justify-center"
+                style={{ background: 'hsl(var(--warm-brown) / 0.25)' }}
+              >
+                <span
+                  className="font-mono text-xs uppercase tracking-widest"
+                  style={{ color: 'hsl(var(--paper-primary) / 0.35)' }}
+                >
+                  logo
+                </span>
+              </div>
+              <span
+                className="font-mono text-[10px] uppercase tracking-widest"
+                style={{ color: 'hsl(var(--paper-primary) / 0.30)' }}
+              >
+                Sponsored
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Right: label + ticker */}
@@ -79,7 +109,6 @@ export function PremiumAdBanner({ sponsorName, sponsorUrl, sponsorDisplay }: Pre
               >
                 {tickerContent}
               </span>
-              {/* Second copy for seamless loop */}
               <span
                 className="font-display text-xl sm:text-2xl font-semibold whitespace-nowrap pr-16"
                 aria-hidden="true"
