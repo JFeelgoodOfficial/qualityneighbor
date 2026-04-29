@@ -154,9 +154,22 @@ export function Navigation() {
             </SheetTrigger>
             <SheetContent side="right" className="w-full sm:w-80 bg-cream border-l border-espresso/10">
               <div className="flex flex-col h-full pt-8">
-                <div className="mb-8">
-                  <p className="font-display text-xl font-bold text-espresso">QualityNeighbor</p>
-                  <p className="text-sm text-warm-brown">Hartland Ranch • Lockhart, TX</p>
+                <div className="flex items-start justify-between mb-8">
+                  <div>
+                    <p className="font-display text-xl font-bold text-espresso">QualityNeighbor</p>
+                    <p className="text-sm text-warm-brown">Hartland Ranch • Lockhart, TX</p>
+                  </div>
+                  <button
+                    onClick={toggleDark}
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-espresso hover:bg-paper-secondary transition-colors"
+                    aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                  >
+                    {isDark
+                      ? <LightbulbOff className="w-5 h-5 bulb-off transition-all duration-300" />
+                      : <Lightbulb className="w-5 h-5 bulb-on transition-all duration-300" />
+                    }
+                    <span className="font-medium text-sm">{isDark ? 'Light' : 'Dark'}</span>
+                  </button>
                 </div>
 
                 <nav className="space-y-1 flex-1">
@@ -182,17 +195,6 @@ export function Navigation() {
                     );
                   })}
                 </nav>
-
-                <button
-                  onClick={toggleDark}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-espresso hover:bg-paper-secondary transition-colors w-full"
-                >
-                  {isDark
-                    ? <LightbulbOff className="w-5 h-5 bulb-off transition-all duration-300" />
-                    : <Lightbulb className="w-5 h-5 bulb-on transition-all duration-300" />
-                  }
-                  <span className="font-medium">{isDark ? 'Light Mode' : 'Dark Mode'}</span>
-                </button>
                 <a
                   href="#contact"
                   onClick={(e) => {
