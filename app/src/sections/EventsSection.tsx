@@ -21,35 +21,35 @@ const eventsData: Event[] = [
   {
     id: '1',
     title: 'Block Party on Bluebonnet',
-    date: 'Sat, Apr 19',
+    date: 'Sat, May 17',
     time: '5–8pm',
     location: 'Bluebonnet Lane',
     description: 'Potluck, music, and a kids\' bike parade. Bring a dish to share!',
     image: '/images/event-block-party.jpg',
-    startISO: '20260419T170000',
-    endISO: '20260419T200000',
+    startISO: '20260517T170000',
+    endISO: '20260517T200000',
   },
   {
     id: '2',
     title: 'Yard Sale Trail',
-    date: 'Sat, Apr 26',
+    date: 'Sat, May 23',
     time: '8am–12pm',
     location: 'Throughout the neighborhood',
     description: 'Map pickup at the clubhouse. Find treasures from your neighbors!',
     image: '/images/event-yard-sale.jpg',
-    startISO: '20260426T080000',
-    endISO: '20260426T120000',
+    startISO: '20260523T080000',
+    endISO: '20260523T120000',
   },
   {
     id: '3',
     title: 'Garden Walk & Talk',
-    date: 'Sun, Apr 27',
+    date: 'Sun, May 24',
     time: '9am',
     location: 'Meet at Community Garden',
     description: 'Tour three neighbor gardens + Q&A with local gardening enthusiasts.',
     image: '/images/event-garden-walk.jpg',
-    startISO: '20260427T090000',
-    endISO: '20260427T110000',
+    startISO: '20260524T090000',
+    endISO: '20260524T110000',
   },
 ];
 
@@ -90,8 +90,8 @@ export function EventsSection() {
   const prefersReducedMotion = useReducedMotion();
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Next event: Block Party on Apr 19, 2026
-  const nextEventDate = new Date('2026-04-19T17:00:00');
+  // Next event: Block Party on May 17, 2026
+  const nextEventDate = new Date('2026-05-17T17:00:00');
 
   useEffect(() => {
     const el = bodyRef.current;
