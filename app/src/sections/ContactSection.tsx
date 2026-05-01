@@ -178,7 +178,7 @@ export function ContactSection() {
             <p className="text-xs text-warm-brown/60">
               © 2026 QualityNeighbor. Built for Hartland Ranch.
             </p>
-            <p className="text-xs text-warm-brown/40">Issue 04 • April 2026</p>
+            <p className="text-xs text-warm-brown/40">Issue 05 • May 2026</p>
           </div>
         </footer>
       </div>
