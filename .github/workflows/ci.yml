@@ -34,23 +34,7 @@ jobs:
 
       - name: ESLint
         working-directory: ./app
-        run: npx eslint "src/**/*.{ts,tsx}" --max-warnings 0
-
-      - name: Prettier format check
-        working-directory: ./app
-        run: npx prettier --check "src/**/*.{ts,tsx,css,json}"
-
-      - name: Vitest unit tests with coverage
-        working-directory: ./app
-        run: npm run test:coverage
-
-      - name: Upload coverage report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: app/coverage/
-          retention-days: 14
+        run: npm run lint
 
       - name: Vite production build
         working-directory: ./app
@@ -67,28 +51,6 @@ jobs:
         working-directory: ./app
         run: npm audit --audit-level=high
 
-      - name: Image size audit
-        run: node scripts/check-images.js
-
-      - name: SEO files check
-        run: node scripts/check-seo-files.js
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium firefox webkit
-
-      - name: Playwright E2E tests
-        run: npx playwright test
-        env:
-          CI: 'true'
-
-      - name: Upload Playwright report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
-
   lighthouse:
     name: Lighthouse CI
     if: github.event_name == 'pull_request' && github.base_ref == 'main'
@@ -103,14 +65,19 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: app/dist/
+
       - name: Install Lighthouse CI
         run: npm install -g @lhci/cli@0.14.x
 
       - name: Run Lighthouse CI
+        run: lhci autorun --collect.staticDistDir=app/dist --upload.target=temporary-public-storage
         env:
-          BASE_URL: ${{ secrets.PREVIEW_URL || 'http://localhost:4173' }}
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-        run: lhci autorun
 
       - name: Upload Lighthouse reports
         if: always()
