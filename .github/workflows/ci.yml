@@ -27,9 +27,6 @@ jobs:
             ./package-lock.json
 
       - name: Install app dependencies
-          cache-dependency-path: ./app/package-lock.json
-
-      - name: Install dependencies
         working-directory: ./app
         run: npm ci
 
@@ -40,7 +37,6 @@ jobs:
       - name: ESLint
         working-directory: ./app
         run: npm run lint
-        run: npx eslint "src/**/*.{ts,tsx}" --max-warnings 0
 
       - name: Prettier format check
         working-directory: ./app
@@ -125,10 +121,6 @@ jobs:
         run: lhci autorun --collect.staticDistDir=app/dist --upload.target=temporary-public-storage
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-        env:
-          BASE_URL: ${{ secrets.PREVIEW_URL || 'http://localhost:4173' }}
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-        run: lhci autorun
 
       - name: Upload Lighthouse reports
         if: always()
