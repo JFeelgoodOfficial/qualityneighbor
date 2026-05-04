@@ -32,10 +32,6 @@ function GameItem({ game }: { game: Game }) {
   const [srcLoaded, setSrcLoaded] = useState(false);
 
   useEffect(() => {
-    if (isExpanded && !srcLoaded) setSrcLoaded(true);
-  }, [isExpanded, srcLoaded]);
-
-  useEffect(() => {
     const el = bodyRef.current;
     if (!el) return;
     el.style.height = isExpanded ? el.scrollHeight + 'px' : '0px';
@@ -49,7 +45,7 @@ function GameItem({ game }: { game: Game }) {
   return (
     <div className="border-b border-paper-secondary last:border-b-0">
       <button
-        onClick={() => setIsExpanded(p => !p)}
+        onClick={() => { if (!isExpanded) setSrcLoaded(true); setIsExpanded(p => !p); }}
         className="w-full text-left group py-5"
         aria-expanded={isExpanded}
         aria-controls={`${game.id}-body`}

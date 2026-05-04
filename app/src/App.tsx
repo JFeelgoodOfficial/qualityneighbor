@@ -11,9 +11,7 @@ import './App.css';
 const EventsSection = lazy(() =>
   import('@/sections/EventsSection').then(m => ({ default: m.EventsSection }))
 );
-const PollSection = lazy(() =>
-  import('@/sections/PollSection').then(m => ({ default: m.PollSection }))
-);
+const PollSection = lazy(() => import('@/sections/PollSection'));
 const StorySection = lazy(() =>
   import('@/sections/StorySection').then(m => ({ default: m.StorySection }))
 );

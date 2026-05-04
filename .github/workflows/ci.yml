@@ -22,9 +22,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          cache-dependency-path: ./app/package-lock.json
+          cache-dependency-path: |
+            ./app/package-lock.json
+            ./package-lock.json
 
-      - name: Install dependencies
+      - name: Install app dependencies
         working-directory: ./app
         run: npm ci
 
@@ -34,7 +36,7 @@ jobs:
 
       - name: ESLint
         working-directory: ./app
-        run: npx eslint "src/**/*.{ts,tsx}" --max-warnings 0
+        run: npm run lint
 
       - name: Prettier format check
         working-directory: ./app
@@ -66,6 +68,9 @@ jobs:
       - name: npm security audit
         working-directory: ./app
         run: npm audit --audit-level=high
+
+      - name: Install root dependencies
+        run: npm ci
 
       - name: Image size audit
         run: node scripts/check-images.js
@@ -103,14 +108,19 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: app/dist/
+
       - name: Install Lighthouse CI
         run: npm install -g @lhci/cli@0.14.x
 
       - name: Run Lighthouse CI
+        run: lhci autorun --collect.staticDistDir=app/dist --upload.target=temporary-public-storage
         env:
-          BASE_URL: ${{ secrets.PREVIEW_URL || 'http://localhost:4173' }}
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-        run: lhci autorun
 
       - name: Upload Lighthouse reports
         if: always()
