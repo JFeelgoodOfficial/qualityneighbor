@@ -22,7 +22,9 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          cache-dependency-path: ./app/package-lock.json
+          cache-dependency-path: |
+            ./app/package-lock.json
+            ./package-lock.json
 
       - name: Install app dependencies
         working-directory: ./app
@@ -68,7 +70,7 @@ jobs:
         run: npm audit --audit-level=high
 
       - name: Install root dependencies
-        run: npm install
+        run: npm ci
 
       - name: Image size audit
         run: node scripts/check-images.js

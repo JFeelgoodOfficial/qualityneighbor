@@ -20,4 +20,13 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // shadcn/ui generated files intentionally export both components and
+    // variant constants from the same file — disable the rules that flag this.
+    files: ['src/components/ui/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+      'react-hooks/purity': 'off',
+    },
+  },
 ])
