@@ -15,7 +15,7 @@ vi.mock('@/sections/PollSection.data', () => ({
   },
 }))
 
-import PollSection from '@/sections/PollSection'
+import { PollSection } from '@/sections/PollSection'
 
 const POLL_KEY = 'qn:poll:apr-2026-park'
 
