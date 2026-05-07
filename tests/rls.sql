@@ -14,7 +14,7 @@ begin;
 -- tests schema for helper functions; dropped on rollback
 create schema if not exists tests;
 
-select plan(72);
+select plan(73);
 
 -- ============================================================
 -- SEED DATA
@@ -732,6 +732,21 @@ select is(
   ) select count(*) from del),
   1::bigint,
   'alice can DELETE her own block'
+);
+
+-- ============================================================
+-- DISPLAY NAME UNIQUENESS (case-insensitive)
+-- ============================================================
+
+select tests.set_user('00000000-0000-0000-0000-000000000001'::uuid);
+
+-- alice CANNOT take a display_name that differs only in case from bob's
+select throws_ok(
+  $$update public.profiles set display_name = 'BOB'
+    where id = '00000000-0000-0000-0000-000000000001'$$,
+  '23505',
+  null,
+  'alice CANNOT claim display_name ''BOB'' — conflicts with ''Bob'' (23505)'
 );
 
 -- ============================================================

@@ -216,6 +216,11 @@ create index if not exists idx_profiles_approved
   on public.profiles (verification_status)
   where verification_status = 'approved';
 
+-- Case-insensitive unique display names. A unique index on an expression
+-- is the Postgres-idiomatic way to enforce this without a separate column.
+create unique index if not exists profiles_display_name_unique
+  on public.profiles (lower(display_name));
+
 -- ============================================================
 -- 5. TRIGGERS AND FUNCTIONS
 -- ============================================================
