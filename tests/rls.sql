@@ -34,12 +34,12 @@ declare
   v_root    uuid := '00000000-0000-0000-0000-000000000004';
 begin
   -- Insert stub auth users (email only; password hash irrelevant for tests).
-  insert into auth.users (id, email, created_at, updated_at, raw_user_meta_data)
+  insert into auth.users (id, aud, role, email, created_at, updated_at, raw_user_meta_data, raw_app_meta_data)
   values
-    (v_alice,   'alice@hartlandranch.test',   now(), now(), '{"display_name":"Alice"}'),
-    (v_bob,     'bob@hartlandranch.test',     now(), now(), '{"display_name":"Bob"}'),
-    (v_mallory, 'mallory@hartlandranch.test', now(), now(), '{"display_name":"Mallory"}'),
-    (v_root,    'root@hartlandranch.test',    now(), now(), '{"display_name":"Root"}')
+    (v_alice,   'authenticated', 'authenticated', 'alice@hartlandranch.test',   now(), now(), '{"display_name":"Alice"}',   '{}'),
+    (v_bob,     'authenticated', 'authenticated', 'bob@hartlandranch.test',     now(), now(), '{"display_name":"Bob"}',     '{}'),
+    (v_mallory, 'authenticated', 'authenticated', 'mallory@hartlandranch.test', now(), now(), '{"display_name":"Mallory"}', '{}'),
+    (v_root,    'authenticated', 'authenticated', 'root@hartlandranch.test',    now(), now(), '{"display_name":"Root"}',    '{}')
   on conflict do nothing;
 
   -- The handle_new_user trigger may have already fired; use upsert-like logic.
