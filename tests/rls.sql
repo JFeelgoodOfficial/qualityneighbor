@@ -11,6 +11,9 @@
 
 begin;
 
+-- tests schema for helper functions; dropped on rollback
+create schema if not exists tests;
+
 select plan(72);
 
 -- ============================================================
@@ -171,22 +174,24 @@ select is(
   'alice CANNOT UPDATE bob''s profile (0 rows affected)'
 );
 
--- alice CANNOT set her own is_admin to true (trigger raises exception)
+-- alice CANNOT set her own is_admin to true.
+-- is_admin is not in the column-level UPDATE grant for authenticated, so
+-- Postgres raises 42501 (permission denied) before the trigger fires.
 select throws_ok(
   $$update public.profiles set is_admin = true
     where id = '00000000-0000-0000-0000-000000000001'$$,
-  'P0001',
+  '42501',
   null,
-  'alice CANNOT set is_admin = true on her own row'
+  'alice CANNOT set is_admin = true — column grant blocks it (42501)'
 );
 
--- alice CANNOT set her own verification_status to approved
+-- Same for verification_status: column grant raises 42501 before trigger.
 select throws_ok(
   $$update public.profiles set verification_status = 'approved'
     where id = '00000000-0000-0000-0000-000000000001'$$,
-  'P0001',
+  '42501',
   null,
-  'alice CANNOT set verification_status on her own row'
+  'alice CANNOT set verification_status — column grant blocks it (42501)'
 );
 
 -- ============================================================

@@ -285,9 +285,13 @@ returns trigger
 language plpgsql
 as $$
 begin
-  -- current_user is the Postgres role executing the statement.
-  -- service_role is trusted; authenticated is not.
-  if current_user = 'service_role' then
+  -- Only block changes made through the PostgREST 'authenticated' role.
+  -- Migrations, seeds, service_role, and the postgres superuser all run
+  -- as other roles and must be able to set these columns freely.
+  -- (Column-level GRANTs already prevent authenticated users from naming
+  -- these columns in an UPDATE, but this trigger is retained as a
+  -- defence-in-depth guard in case grant configuration changes.)
+  if current_user <> 'authenticated' then
     return new;
   end if;
 
