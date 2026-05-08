@@ -1,8 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
-import { Menu, Mail, Lightbulb, LightbulbOff } from 'lucide-react';
+import { Menu, Mail, Lightbulb, LightbulbOff, LogOut, User } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { scrollTo } from '@/lib/scroll';
 import { useDarkMode } from '@/hooks/useDarkMode';
+import { useAuth } from '@/contexts/AuthContext';
 
 const navLinks = [
   { label: 'Events', href: '#events' },
@@ -26,6 +35,7 @@ export function Navigation() {
   const [activeSection, setActiveSection] = useState<string>('');
   const observerRef = useRef<IntersectionObserver | null>(null);
   const { isDark, toggle: toggleDark } = useDarkMode();
+  const { user, profile, openAuthModal, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -132,17 +142,38 @@ export function Navigation() {
                 : <Lightbulb className="w-5 h-5 bulb-on transition-all duration-300" />
               }
             </button>
-            <a
-              href="#contact"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick('#contact');
-              }}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-vintage-red text-cream text-sm font-medium hover:bg-vintage-red/90 transition-colors"
-            >
-              <Mail className="w-4 h-4" />
-              Subscribe
-            </a>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="flex items-center justify-center w-9 h-9 rounded-full bg-vintage-red text-cream text-sm font-display font-bold hover:bg-vintage-red/90 transition-colors"
+                    aria-label="Account menu"
+                  >
+                    {profile?.display_name?.[0]?.toUpperCase() ?? <User className="w-4 h-4" />}
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-cream border-espresso/10 min-w-44">
+                  <DropdownMenuLabel className="font-mono text-xs text-warm-brown">
+                    {profile?.display_name ?? user.email}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-espresso/10" />
+                  <DropdownMenuItem
+                    onClick={signOut}
+                    className="gap-2 text-sm cursor-pointer text-espresso focus:bg-paper-secondary"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <button
+                onClick={() => openAuthModal('signin')}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-vintage-red text-cream text-sm font-medium hover:bg-vintage-red/90 transition-colors"
+              >
+                Sign In
+              </button>
+            )}
           </nav>
 
           {/* Mobile Menu */}
@@ -197,15 +228,28 @@ export function Navigation() {
                 </nav>
                 <a
                   href="#contact"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick('#contact');
-                  }}
-                  className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-vintage-red text-cream font-medium hover:bg-vintage-red/90 transition-colors"
+                  onClick={(e) => { e.preventDefault(); handleNavClick('#contact'); }}
+                  className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl border border-espresso/20 text-espresso font-medium hover:bg-paper-secondary transition-colors"
                 >
                   <Mail className="w-4 h-4" />
                   Subscribe to Newsletter
                 </a>
+                {user ? (
+                  <button
+                    onClick={signOut}
+                    className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-vintage-red text-cream font-medium hover:bg-vintage-red/90 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sign Out ({profile?.display_name ?? 'Account'})
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => { setIsOpen(false); openAuthModal('signin'); }}
+                    className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-vintage-red text-cream font-medium hover:bg-vintage-red/90 transition-colors"
+                  >
+                    Sign In to Resident Portal
+                  </button>
+                )}
               </div>
             </SheetContent>
           </Sheet>

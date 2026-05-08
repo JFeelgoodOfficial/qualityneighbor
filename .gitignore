@@ -1,2 +1,4 @@
 node_modules/
 app/dist/
+app/.env.local
+app/.env.*.local
