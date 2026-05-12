@@ -12,9 +12,6 @@ import './App.css';
 const EventsSection = lazy(() =>
   import('@/sections/EventsSection').then(m => ({ default: m.EventsSection }))
 );
-const PollSection = lazy(() =>
-  import('@/sections/PollSection').then(m => ({ default: m.PollSection }))
-);
 const StorySection = lazy(() =>
   import('@/sections/StorySection').then(m => ({ default: m.StorySection }))
 );
@@ -73,11 +70,6 @@ function App() {
         <ErrorBoundary>
           <Suspense fallback={<SectionFallback />}>
             <EventsSection />
-          </Suspense>
-        </ErrorBoundary>
-        <ErrorBoundary>
-          <Suspense fallback={<SectionFallback />}>
-            <PollSection />
           </Suspense>
         </ErrorBoundary>
         <ErrorBoundary>
