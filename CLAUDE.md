@@ -6,7 +6,7 @@ AI assistant guidance for the **QualityNeighbor** codebase.
 
 ## Project Overview
 
-QualityNeighbor is the monthly digital newsletter for **Hartland Ranch**, a residential neighborhood in Lockhart, Texas. It is a fully static, client-side single-page application — no backend, no database, no external APIs.
+QualityNeighbor is the monthly digital newsletter for **Hartland Ranch**, a residential neighborhood in Lockhart, Texas. It is a client-side single-page application backed by **Supabase** for authentication and database persistence.
 
 **Live URL:** `https://qualityneighbor.hartlandranch.com/`
 
@@ -44,6 +44,7 @@ The repo contains **compiled build artifacts** at the root. The React/TypeScript
 | Dates | date-fns 4.1.0 |
 | Carousel | Embla Carousel 8.6.0 |
 | Class Merging | clsx 2.1.1 + tailwind-merge 3.4.0 |
+| Backend | Supabase (Auth + Postgres DB) |
 | Node | 20 |
 
 ---
@@ -82,9 +83,10 @@ app/
     │   ├── GardenTipSection.tsx
     │   ├── BusinessAdsSection.tsx
     │   ├── SpotlightSection.tsx
-    │   ├── ShoutoutsSection.tsx
     │   ├── ResourcesSection.tsx
     │   └── ContactSection.tsx
+    ├── contexts/
+    │   └── AuthContext.tsx        # Supabase auth state, session, profile, modal control
     ├── hooks/
     │   ├── useCountdown.ts       # Time-remaining countdown for events
     │   ├── useLocalStorage.ts    # Persist state to localStorage
@@ -92,6 +94,7 @@ app/
     │   ├── useReducedMotion.ts   # Detects prefers-reduced-motion
     │   └── use-mobile.ts         # Mobile breakpoint (768px)
     └── lib/
+        ├── supabase.ts           # Supabase client (requires VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY)
         └── utils.ts              # cn() — merges Tailwind classes via clsx + tailwind-merge
 ```
 
@@ -252,7 +255,7 @@ Use `useLocalStorage` hook for persisted state:
 
 ## Content & Data
 
-All content is **hardcoded as constants** inside each section component. There is no CMS, no API, and no data-fetching layer. To update content (events, needs, business ads, stories, etc.), edit the relevant section file directly.
+Newsletter content (events, stories, ads, etc.) is **hardcoded as constants** inside each section component — no CMS. User authentication and profile data are persisted via **Supabase** (see `src/lib/supabase.ts` and `src/contexts/AuthContext.tsx`). To update content, edit the relevant section file directly.
 
 ---
 
@@ -272,7 +275,7 @@ npx shadcn@latest add <component-name>
 1. **Section-based page layout** — `App.tsx` renders each `*Section` component in order; each section owns its data, animations, and local state.
 2. **Custom hooks for reusable logic** — animations, localStorage, countdown, and responsive detection are abstracted into hooks in `src/hooks/`.
 3. **No routing** — this is a single-page scroll layout; no React Router.
-4. **Static data** — all content is inline constants; no API calls, no async data loading.
+4. **Static content, dynamic auth** — newsletter content is inline constants; user auth and profiles are fetched from Supabase via `AuthContext`.
 5. **PWA-ready** — `manifest.json` provides icons and `standalone` mode for home-screen installation.
 
 ---

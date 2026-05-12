@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Navigation } from '@/components/Navigation';
 import { QuickActionButton } from '@/components/QuickActionButton';
 import { PremiumAdBanner } from '@/components/PremiumAdBanner';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Toaster } from '@/components/ui/sonner';
 import { HeroSection } from '@/sections/HeroSection';
 import './App.css';
@@ -57,9 +58,11 @@ function App() {
 
       <main className="relative">
         <HeroSection />
-        <Suspense fallback={<SectionFallback />}>
-          <WeatherSection />
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<SectionFallback />}>
+            <WeatherSection />
+          </Suspense>
+        </ErrorBoundary>
         <PremiumAdBanner
           sponsorName="HEB"
           sponsorUrl="https://www.heb.com"
@@ -67,33 +70,51 @@ function App() {
           mediaSrc="/images/ad-heb.jpg"
           mediaType="image"
         />
-        <Suspense fallback={<SectionFallback />}>
-          <EventsSection />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
-          <PollSection />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
-          <StorySection />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
-          <GardenTipSection />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
-          <BusinessAdsSection />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
-          <CommunityConnectionsSection />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
-          <FarmersMarketSection />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
-          <HealthDirectorySection />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
-          <BunnyWarrenSection />
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<SectionFallback />}>
+            <EventsSection />
+          </Suspense>
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <Suspense fallback={<SectionFallback />}>
+            <PollSection />
+          </Suspense>
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <Suspense fallback={<SectionFallback />}>
+            <StorySection />
+          </Suspense>
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <Suspense fallback={<SectionFallback />}>
+            <GardenTipSection />
+          </Suspense>
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <Suspense fallback={<SectionFallback />}>
+            <BusinessAdsSection />
+          </Suspense>
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <Suspense fallback={<SectionFallback />}>
+            <CommunityConnectionsSection />
+          </Suspense>
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <Suspense fallback={<SectionFallback />}>
+            <FarmersMarketSection />
+          </Suspense>
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <Suspense fallback={<SectionFallback />}>
+            <HealthDirectorySection />
+          </Suspense>
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <Suspense fallback={<SectionFallback />}>
+            <BunnyWarrenSection />
+          </Suspense>
+        </ErrorBoundary>
         <PremiumAdBanner
           sponsorName="Minicuration"
           sponsorUrl="http://Minicuration.com"
@@ -101,12 +122,16 @@ function App() {
           mediaSrc="/images/ad-minicuration.mp4"
           mediaType="video"
         />
-        <Suspense fallback={<SectionFallback />}>
-          <ResourcesSection />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
-          <ContactSection />
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<SectionFallback />}>
+            <ResourcesSection />
+          </Suspense>
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <Suspense fallback={<SectionFallback />}>
+            <ContactSection />
+          </Suspense>
+        </ErrorBoundary>
       </main>
 
       <QuickActionButton />
