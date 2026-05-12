@@ -36,6 +36,9 @@ const FarmersMarketSection = lazy(() =>
 const HealthDirectorySection = lazy(() =>
   import('@/sections/HealthDirectorySection').then(m => ({ default: m.HealthDirectorySection }))
 );
+const BunnyWarrenSection = lazy(() =>
+  import('@/sections/BunnyWarrenSection').then(m => ({ default: m.BunnyWarrenSection }))
+);
 const ContactSection = lazy(() =>
   import('@/sections/ContactSection').then(m => ({ default: m.ContactSection }))
 );
@@ -97,6 +100,11 @@ function App() {
         <ErrorBoundary>
           <Suspense fallback={<SectionFallback />}>
             <HealthDirectorySection />
+          </Suspense>
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <Suspense fallback={<SectionFallback />}>
+            <BunnyWarrenSection />
           </Suspense>
         </ErrorBoundary>
         <PremiumAdBanner
